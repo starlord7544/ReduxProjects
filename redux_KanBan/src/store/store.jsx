@@ -1,8 +1,18 @@
-import { configureStore } from "@reduxjs/toolkit";
+import { configureStore } from "@reduxjs/toolkit"
 import kanbanReducer from './features/kanban/KanbanSlice.jsx'
+import { loadState, saveState } from "./localStorageHelpers.jsx"
 
-export default configureStore({
+const preloadedState = loadState()
+
+const store = configureStore({
     reducer: {
-        kanban: kanbanReducer
-    }
+        kanban: kanbanReducer,
+    },
+    preloadedState,
 })
+
+store.subscribe(() => {
+    saveState(store.getState())
+})
+
+export default store

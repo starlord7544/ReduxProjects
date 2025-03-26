@@ -1,6 +1,6 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import './App.css'
-import { Header, InnerContainer } from './components'
+import { Header, InnerContainer, TaskInput } from './components'
 import { useSelector } from 'react-redux'
 
 function App() {

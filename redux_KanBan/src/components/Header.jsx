@@ -1,13 +1,12 @@
-import React from 'react'
-import TaskInput from './TaskInput'
+    import React from 'react'
+    import TaskInput from './TaskInput'
 
-const Header = () => {
-    return (
-        <header>
-            Hello User,
-            <TaskInput />
-        </header>
-    )
-}
+    const Header = () => {
+        return (
+            <header>
+                KanBan Board
+            </header>
+        )
+    }
 
-export default Header
+    export default Header

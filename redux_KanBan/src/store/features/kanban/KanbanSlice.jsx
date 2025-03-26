@@ -7,7 +7,8 @@ const tempData1 = {
     content: 'content sv',
     category: 'todo',
     tags: ['tag1', 'tag2'],
-    collaborators: [],
+    priority : '0',
+    // collaborators: [],
 }
 
 const initialState = {
@@ -38,12 +39,13 @@ const KanbanSlice = createSlice({
             state[toCategory].push(task)
         },
         deleteTask: (state, action) => {
-
+            const {category, taskId} = action.payload
+            state[category] = state[category].filter(ele => ele.id !== taskId)
         }
     }
 })
 
-export const { addTask, moveTask } = KanbanSlice.actions
+export const { addTask, moveTask, deleteTask } = KanbanSlice.actions
 export default KanbanSlice.reducer
 
 
