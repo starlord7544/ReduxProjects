@@ -27,7 +27,7 @@ const KanbanSlice = createSlice({
                     id: uuidv4(),
                 }
             )
-            state[action.payload.category].sort((a,b) => b.priority - a.priority)
+            state[action.payload.category].sort((a, b) => b.priority - a.priority)
         },
         moveTask: (state, action) => {
             const { fromCategory, toCategory, taskId } = action.payload
@@ -35,10 +35,20 @@ const KanbanSlice = createSlice({
             task.category = toCategory
             state[fromCategory] = state[fromCategory].filter(ele => ele.id !== taskId)
             state[toCategory].push(task)
-            state[toCategory].sort((a,b) => b.priority - a.priority)
+            state[toCategory].sort((a, b) => b.priority - a.priority)
         },
         editTask: (state, action) => {
             console.log(action.payload)
+            const category = action.payload.EditedTask.category
+            state[category] = state[category].map(ele => {
+                if (ele.id === action.payload.taskId) {
+                    return {
+                        ...ele,
+                        ...action.payload.EditedTask
+                    }
+                }
+                return ele
+            })
         },
         deleteTask: (state, action) => {
             const { category, taskId } = action.payload

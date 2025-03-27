@@ -1,3 +1,4 @@
+import EditTaskPage from "./EditTaskPage";
 import Header from "./Header";
 import InnerContainer from "./InnerContainer";
 import TaskBox from "./TaskBox";
@@ -8,5 +9,6 @@ export {
     Header,
     TaskInput,
     TaskBox,
-    InnerContainer
+    InnerContainer,
+    EditTaskPage
 }

@@ -49,7 +49,7 @@ const TaskInput = ({ category, setIsAdding }) => {
                 <textarea
                     name='tag'
                     id='taskTag'
-                    placeholder='comma separated'
+                    placeholder='Separated by commas'
                     rows={2}
                 />
                 <br />
