@@ -49,6 +49,7 @@ const KanbanSlice = createSlice({
                 }
                 return ele
             })
+            state[category].sort((a, b) => b.priority - a.priority)
         },
         deleteTask: (state, action) => {
             const { category, taskId } = action.payload
