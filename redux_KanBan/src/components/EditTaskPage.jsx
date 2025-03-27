@@ -1,9 +1,6 @@
-import React, { useState } from 'react'
-import { useDispatch } from 'react-redux'
-import { addTask } from '../store/features/kanban/KanbanSlice'
-import CancelIcon from '../assets/Cancel2.svg'
+import React from 'react'
 
-const TaskInput = ({ category, setIsAdding }) => {
+const EditTaskPage = () => {
     const dispatch = useDispatch()
     const [priority, setPriority] = useState(1)
 
@@ -71,4 +68,4 @@ const TaskInput = ({ category, setIsAdding }) => {
     )
 }
 
-export default TaskInput
+export default EditTaskPage

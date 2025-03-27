@@ -7,8 +7,7 @@ const tempData1 = {
     content: 'content sv',
     category: 'todo',
     tags: ['tag1', 'tag2'],
-    priority : '0',
-    // collaborators: [],
+    priority: '0',
 }
 
 const initialState = {
@@ -28,24 +27,27 @@ const KanbanSlice = createSlice({
                     id: uuidv4(),
                 }
             )
+            state[action.payload.category].sort((a,b) => b.priority - a.priority)
         },
         moveTask: (state, action) => {
             const { fromCategory, toCategory, taskId } = action.payload
-            // console.log(action.payload)
             const task = state[fromCategory].find(ele => ele.id === taskId)
             task.category = toCategory
-            // console.log(task)
             state[fromCategory] = state[fromCategory].filter(ele => ele.id !== taskId)
             state[toCategory].push(task)
+            state[toCategory].sort((a,b) => b.priority - a.priority)
+        },
+        editTask: (state, action) => {
+            console.log(action.payload)
         },
         deleteTask: (state, action) => {
-            const {category, taskId} = action.payload
+            const { category, taskId } = action.payload
             state[category] = state[category].filter(ele => ele.id !== taskId)
         }
     }
 })
 
-export const { addTask, moveTask, deleteTask } = KanbanSlice.actions
+export const { addTask, moveTask, deleteTask, editTask } = KanbanSlice.actions
 export default KanbanSlice.reducer
 
 

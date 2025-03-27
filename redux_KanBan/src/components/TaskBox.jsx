@@ -1,9 +1,13 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { deleteTask } from '../store/features/kanban/KanbanSlice'
+import { deleteTask, editTask } from '../store/features/kanban/KanbanSlice'
+import EditIcon from '../assets/Edit.svg'
+import Del from '../assets/Delete.svg'
+// import DeleteIcon from '..assets/Delete.svg'
 
 const TaskBox = ({ task }) => {
-    const { title, tags, content, category, id } = task
+    const [isEditing, setIsEditing] = useState('')
+    const { title, tags, content, category, id, priority } = task
     const dispatch = useDispatch()
     return (
         <div
@@ -20,22 +24,39 @@ const TaskBox = ({ task }) => {
             <h3 className='task-title'>{title}</h3>
             <p className='content'>{content}</p>
             <div className="tags">
-            {
-                tags?.map((tag, tagIdx) => (
-                    <span className="tag" key={tagIdx + 'tag'}>
-                        {tag}
-                    </span>
-                ))
-            }
+                {
+                    tags?.map((tag, tagIdx) => (
+                        <span className="tag" key={tagIdx + 'tag'}>
+                            {tag}
+                        </span>
+                    ))
+                }
             </div>
-            <button
-                className='del-btn'
-                onClick={() => dispatch(deleteTask({
-                    taskId: id,
-                    category
-                }))}
-            >Delete</button>
-        </div>
+            <div className="task-btn-container">
+                <div className={`task-priority ${priority && priority === 1 ? ('low') : (priority === 2 ? 'mid' : 'high')}`}>
+                </div>
+                <div className="task-btns">
+                    {/* <img
+                        className='edit-btn btn'
+                        onClick={() => dispatch(editTask({
+                            taskId: id,
+                            category
+                        }))}
+                        src={EditIcon}
+                        alt="edit"
+                    /> */}
+                    <img
+                        className='del-btn btn'
+                        onClick={() => dispatch(deleteTask({
+                            taskId: id,
+                            category
+                        }))}
+                        src={Del}
+                        alt='delete'
+                    />
+                </div>
+            </div>
+        </div >
     )
 }
 

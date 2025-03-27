@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react'
 import './App.css'
 import { Header, InnerContainer, TaskInput } from './components'
 import { useSelector } from 'react-redux'

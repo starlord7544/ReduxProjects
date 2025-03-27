@@ -83,10 +83,52 @@ header {
 	height: 30px;
 }
 
+
 .btn-container {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
+}
+
+.task-btn-container {
+	/* border: 1px solid red; */
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding-top: 0.4rem;
+}
+.task-btns {
+	/* border: 1px solid red; */
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 15px;
+	height: 100%;
+}
+.task-btns img {
+	width: 25px;
+	height: 25px;
+	cursor: pointer;
+}
+
+.task-priority {
+	height: 20px;
+	width: 20px;
+	border-radius: 100%;
+	cursor: pointer;
+}
+
+.high {
+	background-color: rgba(255, 0, 0, 0.8);
+	accent-color: rgba(255, 0, 0, 0.8);
+}
+.mid {
+	background-color: rgba(218, 165, 32, 0.8);
+	accent-color: rgba(218, 165, 32, 0.8);
+}
+.low {
+	background-color: rgba(47, 255, 92, 0.8);
+	accent-color: rgba(47, 255, 92, 0.8);
 }
 
 /* Task Cards */
@@ -129,22 +171,6 @@ header {
 	margin: 0 0.25rem 0.25rem 0;
 }
 
-/* Delete Button */
-.del-btn {
-	background: none;
-	border: none;
-	color: #F4212E;
-	font-size: 0.8rem;
-	padding: 0.25rem 0.5rem;
-	cursor: pointer;
-	float: right;
-	border-radius: 4px;
-}
-
-.del-btn:hover {
-	background-color: rgba(244, 33, 46, 0.1);
-}
-
 /* Form Elements */
 form {
 	background-color: var(--bg-secondary);
@@ -180,6 +206,23 @@ select:focus {
 	outline: none;
 	border-color: var(--accent-blue);
 	box-shadow: 0 0 0 2px rgba(29, 161, 242, 0.2);
+}
+
+
+.radio-container {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	/* border: 1px solid red; */
+}
+
+.radio {
+	width: 18px;
+	height: 18px;
+	margin: 0 1rem;
+}
+.radio:not(:checked) {
+	opacity: 0.3;
 }
 
 button[type="submit"] {
@@ -316,12 +359,6 @@ button[type="button"] {
 
 /* Update these styles in your CSS */
 
-.task-container {
-	position: relative;
-	padding-bottom: 2.5rem;
-	/* Add space for delete button */
-}
-
 .tags {
 	display: flex;
 	flex-wrap: wrap;
@@ -331,30 +368,9 @@ button[type="button"] {
 	margin-right: 0.5rem;
 }
 
-.del-btn {
-	position: absolute;
-	right: 1rem;
-	bottom: 1rem;
-	float: none;
-	margin: 0;
-	background: rgba(244, 33, 46, 0.1);
-	padding: 0.4rem 0.8rem;
-	border-radius: 20px;
-	transition: all 0.2s ease;
-}
-
-.del-btn:hover {
-	background: rgba(244, 33, 46, 0.3);
-}
-
 /* Add media query for mobile */
 @media (max-width: 480px) {
 	.tags {
 		max-width: calc(100% - 70px);
-	}
-
-	.del-btn {
-		right: 0.5rem;
-		bottom: 0.5rem;
 	}
 }
