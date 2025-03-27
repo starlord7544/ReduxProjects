@@ -208,6 +208,11 @@ select:focus {
 	box-shadow: 0 0 0 2px rgba(29, 161, 242, 0.2);
 }
 
+textarea {
+	/* max-height: 100px; */
+	resize: none;
+}
+
 
 .radio-container {
 	display: flex;

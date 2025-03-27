@@ -34,6 +34,7 @@ const TaskInput = ({ category, setIsAdding }) => {
                     name='title'
                     id='taskTitle'
                     autoFocus
+                    autoCapitalize='Sentence'
                     required
                 />
                 <br />
