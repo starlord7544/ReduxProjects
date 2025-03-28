@@ -11,17 +11,19 @@ const EditTaskPage = ({ task, setIsEditing }) => {
         e.preventDefault()
         const formData = new FormData(e.target)
         const tags = formData.get('tag').trim()
-
+        const assigned = formData.get('assigned').trim()
+        
         const EditedTask = {
             title: formData.get('title'),
             content: formData.get('content'),
             tags: tags !== '' ? tags.split(',') : [],
+            assigned: assigned !== '' ? assigned.split(',') : [],
             category: task.category,
-            priority: priority
+            priority: priority,
         }
         setPriority(1)
         dispatch(editTask({
-            taskId : task.id,
+            taskId: task.id,
             EditedTask
         }))
         e.target.reset()
@@ -58,7 +60,15 @@ const EditTaskPage = ({ task, setIsEditing }) => {
                     rows={2}
                     defaultValue={task.tags.join(',')}
                 />
-                <br />
+                <label htmlFor="taskAssigned">Assigned To (Optional): </label>
+                <textarea
+                    name='assigned'
+                    type="text"
+                    id='taskAssigned'
+                    placeholder='Separated by commas'
+                    defaultValue={task.assigned.join(',')}
+                    rows={2}
+                />
                 <div className="radio-container">
                     <span>Priority : </span>
                     <span>

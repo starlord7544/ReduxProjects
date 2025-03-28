@@ -11,14 +11,16 @@ const TaskInput = ({ category, setIsAdding }) => {
         e.preventDefault()
         const formData = new FormData(e.target)
         const tags = formData.get('tag').trim()
-
+        const assigned = formData.get('assigned').trim()
         const newTask = {
             title: formData.get('title'),
             content: formData.get('content'),
             category: category,
             tags: tags !== '' ? tags.split(',') : [],
-            priority: priority
+            priority: priority,
+            assigned: assigned !== '' ? assigned.split(',') : [],
         }
+        console.log(newTask)
         setPriority(1)
         dispatch(addTask(newTask))
         e.target.reset()
@@ -53,7 +55,14 @@ const TaskInput = ({ category, setIsAdding }) => {
                     placeholder='Separated by commas'
                     rows={2}
                 />
-                <br />
+                <label htmlFor="taskAssigned">Assigned To (Optional): </label>
+                <textarea
+                    name='assigned'
+                    type="text"
+                    id='taskAssigned'
+                    placeholder='Separated by commas'
+                    rows={2}
+                />
                 <div className="radio-container">
                     <span>Priority : </span>
                     <span>
@@ -62,7 +71,6 @@ const TaskInput = ({ category, setIsAdding }) => {
                         <input onClick={() => setPriority(3)} id='high' type="radio" className='radio high' name='priority' value="3" />
                     </span>
                 </div>
-                <br />
                 <div className="btn-container">
                     <button type="submit" title='Add Task' >Add task</button>
                     <img src={CancelIcon} alt="cancel" className='icon' onClick={(e) => setIsAdding(false)} />

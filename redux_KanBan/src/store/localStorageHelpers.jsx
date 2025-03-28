@@ -16,5 +16,3 @@ export const saveState = (state) => {
         console.error("Could not save state", err)
     }
 }
-
-// 

@@ -8,12 +8,12 @@ import EditTaskPage from './EditTaskPage'
 
 const TaskBox = ({ task }) => {
     const [isEditing, setIsEditing] = useState('')
-    const { title, tags, content, category, id, priority } = task
+    const { title, tags, assigned, content, category, id, priority } = task
     const dispatch = useDispatch()
     return (
         <>
             {
-                isEditing && <EditTaskPage task={task} setIsEditing={setIsEditing}/>
+                isEditing && <EditTaskPage task={task} setIsEditing={setIsEditing} />
             }
             <div
                 className="task-container"
@@ -26,7 +26,10 @@ const TaskBox = ({ task }) => {
                     e.dataTransfer.setData('movingData', JSON.stringify(movingData))
                 }}
             >
-                <h3 className='task-title'>{title}</h3>
+                <div className="title-container">
+                    <div className={`task-priority ${priority && priority === 1 ? ('low') : (priority === 2 ? 'mid' : 'high')}`}></div>
+                    <h3 className='task-title'>{title}</h3>
+                </div>
                 <p className='content'>{content}</p>
                 <div className="tags">
                     {
@@ -37,9 +40,16 @@ const TaskBox = ({ task }) => {
                         ))
                     }
                 </div>
-                <div className="task-btn-container">
-                    <div className={`task-priority ${priority && priority === 1 ? ('low') : (priority === 2 ? 'mid' : 'high')}`}>
-                    </div>
+                {/* <div className="assigned">
+                    {
+                        assigned?.map((ele, assignedIdx) => (
+                            <p key={assignedIdx + 'assigned'}>
+                                @{ele}
+                            </p>
+                        ))
+                    }
+                </div> */}
+                {/* <div className="task-btn-container"> */}
                     <div className="task-btns">
                         <img
                             className='edit-btn btn'
@@ -56,7 +66,7 @@ const TaskBox = ({ task }) => {
                             src={Del}
                             alt='delete'
                         />
-                    </div>
+                    {/* </div> */}
                 </div>
             </div >
         </>

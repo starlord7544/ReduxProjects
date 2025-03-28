@@ -1,32 +1,25 @@
 import './App.css'
-import { Header, InnerContainer, TaskInput } from './components'
+import { Header } from './components'
 import { useSelector } from 'react-redux'
+import Container from './components/Container'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import LoginPage from './components/LoginPage'
+import Layout from './layout/Layout'
+import RegisterPage from './components/RegisterPage'
 
 function App() {
 
-	const { completed, inProgress, todo } = useSelector((state) => state.kanban)
-
 	return (
 		<>
-			<Header />
-			{/* <Container /> */}
-			<div className='container'>
-				<InnerContainer
-					Arr={todo}
-					Heading={'Todo'}
-					category={'todo'}
-				/>
-				<InnerContainer
-					Arr={inProgress}
-					Heading={'In-Progress'}
-					category={'inProgress'}
-				/>
-				<InnerContainer
-					Arr={completed}
-					Heading={'Completed'}
-					category={'completed'}
-				/>
-			</div>
+			<Router>
+				<Routes>
+					<Route path='/' element={<Layout />}>
+						<Route path='' element={<Container />} />
+						<Route path='login' element={<LoginPage />} />
+						<Route path='register' element={<RegisterPage />} />
+					</Route>
+				</Routes>
+			</Router>
 		</>
 	)
 }
