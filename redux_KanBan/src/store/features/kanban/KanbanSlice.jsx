@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { act } from "react";
 import { v4 as uuidv4 } from 'uuid'
 
 const tempData1 = {
@@ -13,7 +12,8 @@ const tempData1 = {
 const initialState = {
     todo: [],
     inProgress: [],
-    completed: []
+    completed: [],
+    assignPage: '',
 }
 
 const KanbanSlice = createSlice({
@@ -22,13 +22,13 @@ const KanbanSlice = createSlice({
     reducers: {
         addTask: (state, action) => {
             const tags = action.payload.tags.filter(ele => ele.trim().length > 0)
-            const assigned = action.payload.assigned.filter(ele => ele.trim().length > 0)
+            // const assigned = action.payload.assigned.filter(ele => ele.trim().length > 0)
             state[action.payload.category].push(
                 {
                     ...action.payload,
                     // tags: [...tags],
                     tags,
-                    assigned,
+                    // assigned,
                     id: uuidv4(),
                 }
             )
@@ -45,9 +45,9 @@ const KanbanSlice = createSlice({
         editTask: (state, action) => {
             const category = action.payload.EditedTask.category
             const tags = action.payload.EditedTask.tags.filter(ele => ele.trim().length > 0)
-            const assigned = action.payload.EditedTask.assigned.filter(ele => ele.trim().length > 0)
+            // const assigned = action.payload.EditedTask.assigned.filter(ele => ele.trim().length > 0)
             state[category] = state[category].map(ele => {
-                if (ele.id === action.payload.taskId) {
+                if (ele.id === action.payload.taskId) { 
                     return {
                         ...ele,
                         ...action.payload.EditedTask,
@@ -57,17 +57,19 @@ const KanbanSlice = createSlice({
                 }
                 return ele
             })
-            console.log(tags)
             state[category].sort((a, b) => b.priority - a.priority)
         },
         deleteTask: (state, action) => {
             const { category, taskId } = action.payload
             state[category] = state[category].filter(ele => ele.id !== taskId)
+        },
+        setIsAssignPage: (state, action) => {
+            state.assignPage = action.payload
         }
     }
 })
 
-export const { addTask, moveTask, deleteTask, editTask } = KanbanSlice.actions
+export const { addTask, moveTask, deleteTask, editTask, setIsAssignPage } = KanbanSlice.actions
 export default KanbanSlice.reducer
 
 

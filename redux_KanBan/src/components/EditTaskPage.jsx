@@ -61,14 +61,14 @@ const EditTaskPage = ({ task, setIsEditing }) => {
                     defaultValue={task.tags.join(',')}
                 />
                 <label htmlFor="taskAssigned">Assigned To (Optional): </label>
-                <textarea
+                {/* <textarea
                     name='assigned'
                     type="text"
                     id='taskAssigned'
                     placeholder='Separated by commas'
                     defaultValue={task.assigned.join(',')}
                     rows={2}
-                />
+                /> */}
                 <div className="radio-container">
                     <span>Priority : </span>
                     <span>

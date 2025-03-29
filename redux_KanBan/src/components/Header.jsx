@@ -1,6 +1,7 @@
 import React from 'react'
 import TaskInput from './TaskInput'
 import { Link, NavLink } from 'react-router-dom'
+import UserList from './UserList'
 
 const Header = () => {
     return (
@@ -8,14 +9,14 @@ const Header = () => {
             <h1>
                 <Link to={'/'}>KanBan Board</Link>
             </h1>
-            {/* <NavLink
+            <NavLink
                 to={'/login'}
                 className={({ isActive }) =>
                     isActive ? "disabled" : ""
                 }
             >
                 Login
-            </NavLink> */}
+            </NavLink>
         </header>
     )
 }

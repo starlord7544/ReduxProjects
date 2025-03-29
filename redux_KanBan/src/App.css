@@ -149,13 +149,12 @@ header a {
     margin-bottom: 1rem;
     border: 1px solid var(--border-color);
     transition: transform 0.2s ease;
-    cursor: move;
     position: relative;
 }
 
 .task-container:hover {
-    transform: translateY(0px);
-    border-color: var(--accent-blue);
+    /* border-color: var(--accent-blue); */
+    box-shadow: 0 0 2px 0px var(--accent-blue);
 }
 
 .title-container {
@@ -388,42 +387,48 @@ button[type="button"] {
     display: flex;
     flex-wrap: wrap;
     gap: 0.25rem;
+    width: calc(100% - 25px);
 }
 
 /* Add these styles to your CSS file */
 
+.assign-btn {
+    width: 21px;
+    height: 21px;
+    cursor: pointer;
+    position: absolute;
+    bottom: 21px;
+    right: 15px;
+}
+
 .assigned {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.25rem;
-    margin: 0.5rem 0;
+    align-items: center;
+    gap: 0.45rem;
+    /* border: 1px solid; */
 }
 
-.assigned p {
-    display: inline-block;
+.user-profile {
     background-color: rgba(102, 126, 234, 0.1);
     color: #667eea;
-    font-size: 0.75rem;
-    padding: 0.25rem 0.75rem;
-    border-radius: 10px;
-    margin: 0;
-    margin-right: 5px;
-
+    font-size: 0.8rem;
+    font-weight: 700;
+    height: 25px;
+    width: 25px;
+    text-align: center;
+    padding-top: 0.18rem;
+    border-radius: 100%;
+    margin: 0.5rem 0 0.2rem 0;
     border: 1px solid rgba(102, 126, 234, 0.2);
+    text-transform: uppercase;
+    cursor: pointer;
 }
 
-/* Add priority color adjustments */
-.high+.task-btns .del-btn:hover {
-    background-color: rgba(255, 0, 0, 0.15);
+.user-profile:nth-child(4) {
+    padding-top: 0.05rem;
 }
 
-.mid+.task-btns .del-btn:hover {
-    background-color: rgba(218, 165, 32, 0.15);
-}
-
-.low+.task-btns .del-btn:hover {
-    background-color: rgba(47, 255, 92, 0.15);
-}
 
 /* Add these styles to your existing CSS */
 /* .login-container {
@@ -517,6 +522,95 @@ button[type="button"] {
     text-decoration: underline;
 }
 
+.user-list {
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    width: 150px;
+    height: 200px;
+    overflow: auto;
+    padding: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: absolute;
+    right: 35px;
+    /* top: 0; */
+    bottom: -90px;
+    z-index: 10;
+    transform: scale(0.9);
+}
+
+.user-list p {
+    color: var(--accent-blue);
+    font-size: 0.9rem;
+    font-weight: 700;
+    margin: 0 0 8px 4px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid var(--border-color);
+    letter-spacing: 0.3px;
+}
+
+.user-name {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 8px;
+    margin-bottom: 4px;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    border-bottom: 1px solid rgba(128, 128, 128, 0.111);
+}
+
+.user-name:hover {
+    background-color: rgba(29, 161, 242, 0.1);
+    border-radius: 8px;
+}
+
+.user-name label {
+    color: var(--text-primary);
+    font-size: 0.85rem;
+    cursor: pointer;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex-grow: 1;
+    width: 95%;
+}
+
+.user-name input {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    accent-color: var(--accent-blue);
+    margin-right: 8px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background-color: var(--bg-dark);
+}
+
+.user-name input:checked {
+    background-color: var(--accent-blue);
+    border-color: var(--accent-blue);
+}
+
+/* Scrollbar styling */
+.user-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.user-list::-webkit-scrollbar-track {
+    background: var(--bg-secondary);
+    border-radius: 4px;
+}
+
+.user-list::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 4px;
+}
+
+.user-list::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-blue);
+}
+
 .login-error {
     color: #F4212E;
     background-color: rgba(244, 33, 46, 0.1);
@@ -525,6 +619,11 @@ button[type="button"] {
     margin-bottom: 1rem;
     font-size: 0.9rem;
     text-align: center;
+}
+
+.disabled {
+    opacity: 0.3;
+    pointer-events: none;
 }
 
 @media (max-width: 768px) {

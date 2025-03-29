@@ -1,11 +1,7 @@
 import './App.css'
-import { Header } from './components'
-import { useSelector } from 'react-redux'
-import Container from './components/Container'
+import { Container, LoginPage, RegisterPage, UserList } from './components'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import LoginPage from './components/LoginPage'
 import Layout from './layout/Layout'
-import RegisterPage from './components/RegisterPage'
 
 function App() {
 

@@ -11,16 +11,16 @@ const TaskInput = ({ category, setIsAdding }) => {
         e.preventDefault()
         const formData = new FormData(e.target)
         const tags = formData.get('tag').trim()
-        const assigned = formData.get('assigned').trim()
+        // const assigned = formData.get('assigned').trim()
         const newTask = {
             title: formData.get('title'),
             content: formData.get('content'),
             category: category,
             tags: tags !== '' ? tags.split(',') : [],
             priority: priority,
-            assigned: assigned !== '' ? assigned.split(',') : [],
+            // assigned: assigned !== '' ? assigned.split(',') : [],
         }
-        console.log(newTask)
+        // console.log(newTask)
         setPriority(1)
         dispatch(addTask(newTask))
         e.target.reset()
@@ -55,14 +55,14 @@ const TaskInput = ({ category, setIsAdding }) => {
                     placeholder='Separated by commas'
                     rows={2}
                 />
-                <label htmlFor="taskAssigned">Assigned To (Optional): </label>
+                {/* <label htmlFor="taskAssigned">Assigned To (Optional): </label>
                 <textarea
                     name='assigned'
                     type="text"
                     id='taskAssigned'
                     placeholder='Separated by commas'
                     rows={2}
-                />
+                /> */}
                 <div className="radio-container">
                     <span>Priority : </span>
                     <span>
