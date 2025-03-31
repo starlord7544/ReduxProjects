@@ -38,7 +38,10 @@ const Header = () => {
                                 title='Logout'
                                 src={LogoutIcon}
                                 alt="logout"
-                                onClick={() => dispatch(setUser(null))}
+                                onClick={() => {
+                                    dispatch(setUser(null))
+                                    navigator('/login')
+                                }}
                             />
                         </>
                     ) : (
