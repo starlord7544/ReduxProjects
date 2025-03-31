@@ -21,15 +21,15 @@ const EditTaskPage = ({ task, setIsEditing }) => {
         }
         try {
             await api.updateTask(task._id, EditedTask)
-            setPriority(1)
             dispatch(editTask({
                 taskId: task._id,
                 EditedTask,
                 category: task.category,
-
+                
             }))
-            e.target.reset()
+            setPriority(1)
             setIsEditing(false)
+            e.target.reset()
         } catch (err) {
             console.error(err)
         }

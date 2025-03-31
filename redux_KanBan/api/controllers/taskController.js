@@ -1,4 +1,5 @@
 const Task = require('../model/taskSchema');
+const User = require('../model/userSchema');
 
 module.exports.createTask = async (req, res) => {
     try {
@@ -49,6 +50,33 @@ module.exports.createTask = async (req, res) => {
     }
 }
 
+module.exports.getAssignedTasks = async (req, res) => {
+    try {
+        const userId = req.params.userId;
+
+        const tasks = await Task.find({ assignedTo: userId })
+            .populate('assignedTo', 'username')
+            .lean();
+
+        const categorized = {
+            todo: tasks.filter(t => t.category === 'todo'),
+            inProgress: tasks.filter(t => t.category === 'inProgress'),
+            completed: tasks.filter(t => t.category === 'completed')
+        };
+
+        res.status(200).json({
+            status: 'success',
+            tasks: categorized
+        });
+    } catch (err) {
+        res.status(500).json({
+            status: 'fail',
+            message: 'Failed to fetch assigned tasks',
+            error: err.message
+        });
+    }
+}
+
 module.exports.getUserTasks = async (req, res) => {
     try {
         const userId = req.query.userId;
@@ -85,8 +113,6 @@ module.exports.getUserTasks = async (req, res) => {
 
 module.exports.updateTask = async (req, res) => {
     try {
-
-
         const taskId = req.params.id;
         const updates = req.body;
 
@@ -104,7 +130,8 @@ module.exports.updateTask = async (req, res) => {
 
         const updatedTask = await Task.findByIdAndUpdate(taskId, updates, {
             new: true,
-            runValidators: true
+            runValidators: true,
+            populate: 'assignedTo'
         });
 
         if (!updatedTask) {
@@ -188,7 +215,7 @@ module.exports.moveTask = async (req, res) => {
         const movedTask = await Task.findByIdAndUpdate(
             taskId,
             { category: newCategory },
-            { new: true }
+            { new: true, populate: 'assignedTo' }
         );
 
         if (!movedTask) {
@@ -227,32 +254,56 @@ module.exports.assignUsers = async (req, res) => {
         const { userIds } = req.body;
 
         if (!Array.isArray(userIds)) {
-            return res.status(400).send({
+            return res.status(400).json({
                 status: 'fail',
                 message: 'User IDs must be an array'
             });
         }
 
-        const updatedTask = await Task.findByIdAndUpdate(
-            taskId,
-            { $set: { assignedTo: userIds } },
-            { new: true }
-        ).populate('assignedTo', 'username')
-
-        if (!updatedTask) {
-            return res.status(404).send({
+        // Get previous task state
+        const oldTask = await Task.findById(taskId);
+        if (!oldTask) {
+            return res.status(404).json({
                 status: 'fail',
                 message: 'Task not found'
             });
         }
 
-        res.status(200)
-        res.send({
+        // Convert to strings for comparison
+        const oldUserIds = oldTask.assignedTo.map(id => id.toString());
+        const newUserIds = userIds;
+
+        // Find differences
+        const addedUsers = newUserIds.filter(id => !oldUserIds.includes(id));
+        const removedUsers = oldUserIds.filter(id => !newUserIds.includes(id));
+
+        // Update the task
+        const updatedTask = await Task.findByIdAndUpdate(
+            taskId,
+            { $set: { assignedTo: userIds } },
+            { new: true, populate: { path: 'assignedTo', select: 'username' } }
+        );
+
+        // Update users' assignedTasks arrays
+        if (addedUsers.length > 0) {
+            await User.updateMany(
+                { _id: { $in: addedUsers } },
+                { $addToSet: { assignedTasks: taskId } }
+            );
+        }
+
+        if (removedUsers.length > 0) {
+            await User.updateMany(
+                { _id: { $in: removedUsers } },
+                { $pull: { assignedTasks: taskId } }
+            );
+        }
+
+        res.status(200).json({
             status: 'success',
-            message: 'Users assigned successfully',
+            message: 'Assignments updated successfully',
             task: updatedTask
         });
-
     } catch (error) {
         if (error.name === 'CastError') {
             return res.status(400).send({
@@ -268,3 +319,50 @@ module.exports.assignUsers = async (req, res) => {
         });
     }
 };
+// module.exports.assignUsers = async (req, res) => {
+//     try {
+//         const taskId = req.params.id;
+//         const { userIds } = req.body;
+
+//         if (!Array.isArray(userIds)) {
+//             return res.status(400).send({
+//                 status: 'fail',
+//                 message: 'User IDs must be an array'
+//             });
+//         }
+
+//         const updatedTask = await Task.findByIdAndUpdate(
+//             taskId,
+//             { $set: { assignedTo: userIds } },
+//             { new: true }
+//         ).populate('assignedTo', 'username')
+
+//         if (!updatedTask) {
+//             return res.status(404).send({
+//                 status: 'fail',
+//                 message: 'Task not found'
+//             });
+//         }
+
+//         res.status(200)
+//         res.send({
+//             status: 'success',
+//             message: 'Users assigned successfully',
+//             task: updatedTask
+//         });
+
+//     } catch (error) {
+//         if (error.name === 'CastError') {
+//             return res.status(400).send({
+//                 status: 'fail',
+//                 message: 'Invalid ID format'
+//             });
+//         }
+//         res.status(500)
+//         res.send({
+//             status: 'fail',
+//             message: 'Assignment failed',
+//             error: error.message
+//         });
+//     }
+// };

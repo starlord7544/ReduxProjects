@@ -15,7 +15,8 @@ const userSchema = mongoose.Schema({
     },
     assignedTasks: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Task'
+        ref: 'Task',
+        index : true
     }]
     // email: {
     //     type: String,

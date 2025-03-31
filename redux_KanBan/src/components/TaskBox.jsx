@@ -14,6 +14,7 @@ const TaskBox = ({ task }) => {
     const { title, tags, assignedTo, content, category, _id, priority } = task
     // console.log(title, tags, assignedTo, content, category, _id, priority)
     const dispatch = useDispatch()
+    const { isAssignedView } = useSelector(state => state.kanban)
     const assignPage = useSelector(state => state.kanban.assignPage)
 
     const handleDelete = async () => {
@@ -66,12 +67,17 @@ const TaskBox = ({ task }) => {
                         src={EditIcon}
                         alt="edit"
                     />
-                    <img
-                        className={assignPage !== '' ? 'del-btn disabled' : 'del-btn'}
-                        onClick={handleDelete}
-                        src={Del}
-                        alt='delete'
-                    />
+                    {
+                        
+                        !isAssignedView && (
+                            <img
+                                className={assignPage !== '' ? 'del-btn disabled' : 'del-btn'}
+                                onClick={handleDelete}
+                                src={Del}
+                                alt='delete'
+                            />
+                        )
+                    }
                 </div>
                 <div className="assigned">
                     {

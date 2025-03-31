@@ -1,7 +1,8 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, NavLink } from 'react-router-dom'
-import { setUser } from '../store/features/kanban/KanbanSlice'
+import { setIsAssignedView, setUser } from '../store/features/kanban/KanbanSlice'
+import LogoutIcon from '../assets/Logout.svg'
 
 const Header = () => {
     const { currentUser } = useSelector(state => state.kanban)
@@ -11,20 +12,47 @@ const Header = () => {
             <h2>
                 <Link to={'/'}>KanBan Board</Link>
             </h2>
-            {
-                currentUser && currentUser._id  ? (
-                    <p onClick={() => dispatch(setUser(null))}>Logout</p>
-                ) : (
-                    <NavLink
-                        to={'/login'}
-                        className={({ isActive }) =>
-                            isActive ? "disabled" : ""
-                        }
-                    >
-                        Login
-                    </NavLink>
-                )
-            }
+            <div className="pages">
+                {
+                    currentUser && currentUser._id ? (
+                        <>
+                            <NavLink
+                                to={'/'}
+                                className={({ isActive }) =>
+                                    isActive ? "active link" : "link"
+                                }
+                                onClick={() => dispatch(setIsAssignedView(false))}
+                            >
+                                My Tasks
+                            </NavLink>
+                            <NavLink
+                                to={'/assigned'}
+                                className={({ isActive }) =>
+                                    isActive ? "active link" : "link"
+                                }
+                                onClick={() => dispatch(setIsAssignedView(true))}
+                            >
+                                Assigned</NavLink>
+                            {/* <p onClick={() => dispatch(setUser(null))}>Logout</p> */}
+                            <img
+                                title='Logout'
+                                src={LogoutIcon}
+                                alt="logout"
+                                onClick={() => dispatch(setUser(null))}
+                            />
+                        </>
+                    ) : (
+                        <NavLink
+                            to={'/login'}
+                            className={({ isActive }) =>
+                                isActive ? "disabled" : ""
+                            }
+                        >
+                            Login
+                        </NavLink>
+                    )
+                }
+            </div>
         </header>
     )
 }

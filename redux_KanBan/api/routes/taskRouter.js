@@ -11,6 +11,10 @@ taskRouter
     .route('/getUserTasks')
     .get(taskController.getUserTasks)
 
+    taskRouter
+    .route('/assigned/:userId')
+    .get(taskController.getAssignedTasks)
+
 taskRouter
     .route('/update/:id')
     .put(taskController.updateTask)
@@ -26,5 +30,6 @@ taskRouter
 taskRouter
     .route('/assignUsers/:id/assign')
     .put(taskController.assignUsers)
+
 
 module.exports = taskRouter

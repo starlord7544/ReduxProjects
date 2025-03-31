@@ -17,7 +17,13 @@ export const initialState = {
         inProgress: [],
         completed: [],
     },
+    assignedTasks: {
+        todo: [],
+        inProgress: [],
+        completed: [],
+    },
     error: null,
+    isAssignedView: false,
     assignPage: ''
 }
 
@@ -25,6 +31,9 @@ const KanbanSlice = createSlice({
     name: 'kanban',
     initialState,
     reducers: {
+        setIsAssignedView: (state, action) => {
+            state.isAssignedView = action.payload
+        },
         setUser: (state, action) => {
             state.currentUser = action.payload
         },
@@ -44,10 +53,21 @@ const KanbanSlice = createSlice({
         },
         moveTask: (state, action) => {
             const { fromCategory, toCategory, taskId } = action.payload
-            const task = state.tasks[fromCategory].find(ele => ele._id === taskId)
-            state.tasks[fromCategory] = state.tasks[fromCategory].filter(ele => ele._id !== taskId)
-            state.tasks[toCategory].push({ ...task, category: toCategory })
-            state.tasks[toCategory].sort((a, b) => b.priority - a.priority)
+
+            const taskIdx = state.tasks[fromCategory].findIndex(ele => ele._id === taskId)
+            if (taskIdx !== -1) {
+                const [task] = state.tasks[fromCategory].splice(taskIdx, 1)
+                state.tasks[toCategory].push({ ...task, category: toCategory })
+                state.tasks[toCategory].sort((a, b) => b.priority - a.priority)
+            }
+
+            const assignedTaskIdx = state.assignedTasks[fromCategory].findIndex(ele => ele._id === taskId)
+            if (assignedTaskIdx !== -1) {
+                const [assignedTask] = state.assignedTasks[fromCategory].splice(assignedTaskIdx, 1)
+                state.assignedTasks[toCategory].push({ ...assignedTask, category: toCategory })
+                state.assignedTasks[toCategory].sort((a, b) => b.priority - a.priority)
+            }
+
         },
         setError: (state, action) => {
             state.error = action.payload
@@ -58,32 +78,69 @@ const KanbanSlice = createSlice({
         editTask: (state, action) => {
             const category = action.payload.category
             const tags = action.payload.EditedTask.tags.filter(ele => ele.trim().length > 0)
-            state.tasks[category] = state.tasks[category].map(ele => {
-                if (ele._id === action.payload.taskId) {
-                    return {
-                        ...ele,
-                        ...action.payload.EditedTask,
-                        tags,
+            const taskIdx = state.tasks[category].findIndex(ele => ele._id === action.payload.taskId)
+            if (taskIdx !== -1) {
+                state.tasks[category] = state.tasks[category].map(ele => {
+                    if (ele._id === action.payload.taskId) {
+                        return {
+                            ...ele,
+                            ...action.payload.EditedTask,
+                            tags,
+                        }
                     }
-                }
-                return ele
-            })
-            state.tasks[category].sort((a, b) => b.priority - a.priority)
+                    return ele
+                })
+                state.tasks[category].sort((a, b) => b.priority - a.priority)
+            }
+            const assignedTaskIdx = state.assignedTasks[category].findIndex(ele => ele._id === action.payload.taskId)
+            if (assignedTaskIdx !== -1) {
+                state.assignedTasks[category] = state.assignedTasks[category].map(ele => {
+                    if (ele._id === action.payload.taskId) {
+                        return {
+                            ...ele,
+                            ...action.payload.EditedTask,
+                            tags,
+                        }
+                    }
+                    return ele
+                })
+                state.assignedTasks[category].sort((a, b) => b.priority - a.priority)
+            }
         },
         updateAssignedUsers: (state, action) => {
             const { taskId, category, assignedTo } = action.payload
-            // console.log(taskId, userIds, category)
-            state.tasks[category] = state.tasks[category].map(task => (
-                task._id === taskId ? {
-                    ...task,
-                    assignedTo: assignedTo.map(u => (
-                        {
-                            _id: u._id,
-                            username: u.username
-                        }
-                    ))
-                } : task
-            ))
+            const taskIdx = state.tasks[category].findIndex(ele => ele._id === taskId)
+            if (taskIdx !== -1) {
+                state.tasks[category] = state.tasks[category].map(task => (
+                    task._id === taskId ? {
+                        ...task,
+                        assignedTo: assignedTo.map(u => (
+                            {
+                                _id: u._id,
+                                username: u.username
+                            }
+                        ))
+                    } : task
+                ))
+            }
+            const assignedTaskIdx = state.assignedTasks[category].findIndex(ele => ele._id === action.payload.taskId)
+            if (assignedTaskIdx !== -1) {
+                state.assignedTasks[category] = state.assignedTasks[category].map(task => (
+                    task._id === taskId ? {
+                        ...task,
+                        assignedTo: assignedTo.map(u => (
+                            {
+                                _id: u._id,
+                                username: u.username
+                            }
+                        ))
+                    } : task
+                ))
+
+            }
+        },
+        setAssignedTasks: (state, action) => {
+            state.assignedTasks = action.payload
         }
 
 
@@ -141,23 +198,8 @@ export const {
     editTask,
     setIsAssignPage,
     updateAssignedUsers,
+    setAssignedTasks,
+    setIsAssignedView
 } = KanbanSlice.actions;
 
 export default KanbanSlice.reducer
-
-
-
-// const tempData2 = {
-//     title: 'temp2',
-//     content: 'contentefgbjvaeuibgvfoeae1',
-//     category: 'inProgress',
-//     tags: ['tag1', 'tag2'],
-//     collaborators: [],
-// }
-// const tempData3 = {
-//     title: 'temp3',
-//     content: 'contentefgbjvaeuibgvfoeae1',
-//     category: 'completed',
-//     tags: ['tag1', 'tag2'],
-//     collaborators: [],
-// }

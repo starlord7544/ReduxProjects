@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import TaskBox from './TaskBox'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { moveTask } from '../store/features/kanban/KanbanSlice'
 import AddIcon from '../assets/Add.svg'
 import TaskInput from './TaskInput'
@@ -9,6 +9,8 @@ import api from '../api'
 const InnerContainer = ({ Arr, Heading, category }) => {
     const [isAdding, setIsAdding] = useState(false)
     const dispatch = useDispatch()
+
+    const { isAssignedView } = useSelector(state => state.kanban)
 
     const handleMoveTask = async (taskId, fromCategory, toCategory) => {
         try {
@@ -21,8 +23,6 @@ const InnerContainer = ({ Arr, Heading, category }) => {
             }))
         }
     }
-
-    // console.log(Arr)
 
     return (
         <>
@@ -43,16 +43,20 @@ const InnerContainer = ({ Arr, Heading, category }) => {
             >
                 <div className="top">
                     <h2>{Heading}</h2>
-                    <img
-                        src={AddIcon}
-                        alt="Add"
-                        onClick={() => {
-                            if (isAdding)
-                                return
-                            setIsAdding(true)
-                        }}
-                        className='icon'
-                    />
+                    {
+                        !isAssignedView && (
+                            <img
+                                src={AddIcon}
+                                alt="Add"
+                                onClick={() => {
+                                    if (isAdding)
+                                        return
+                                    setIsAdding(true)
+                                }}
+                                className={'icon'}
+                            />
+                        )
+                    }
                 </div>
                 {
                     Arr.map((task) => (
