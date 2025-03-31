@@ -11,8 +11,8 @@ import api from '../api'
 
 const TaskBox = ({ task }) => {
     const [isEditing, setIsEditing] = useState(false)
-    const { title, tags, assigned, content, category, _id, priority } = task
-    // console.log(title, tags, assigned, content, category, _id, priority)
+    const { title, tags, assignedTo, content, category, _id, priority } = task
+    // console.log(title, tags, assignedTo, content, category, _id, priority)
     const dispatch = useDispatch()
     const assignPage = useSelector(state => state.kanban.assignPage)
 
@@ -75,19 +75,20 @@ const TaskBox = ({ task }) => {
                 </div>
                 <div className="assigned">
                     {
-                        assigned?.map((ele, assignedIdx) => {
-                            if (assignedIdx <= 3) {
+                        assignedTo?.map((user, idx) => {
+                            if (idx <= 3) {
                                 return (
                                     <p
                                         className='user-profile'
-                                        key={assignedIdx + 'assigned'}
+                                        key={user._id}
                                         onClick={() => {
-                                            if (assignedIdx < 3)
+                                            if (idx < 3)
                                                 return
                                             dispatch(setIsAssignPage(assignPage === '' ? _id : ''))
                                         }}
+                                        title={idx < 3 ? user.username : 'show more'}
                                     >
-                                        {assignedIdx < 3 ? ele.trim()[0] : '...'}
+                                        {idx < 3 ? user?.username?.trim()[0] : '...'}
                                     </p>
                                 )
                             }
@@ -96,7 +97,13 @@ const TaskBox = ({ task }) => {
                         })
                     }
                     {
-                        assignPage === _id && <UserList List={[]} filter={false} />
+                        assignPage === _id && (
+                            <UserList
+                                taskId={_id}
+                                initialAssigned={assignedTo}
+                                category={category}
+                            />
+                        )
                     }
                 </div>
                 <img

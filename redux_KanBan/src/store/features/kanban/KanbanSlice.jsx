@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, TaskAbortError } from "@reduxjs/toolkit";
 import { v4 as uuidv4 } from 'uuid'
 
 // const tempData1 = {
@@ -7,20 +7,11 @@ import { v4 as uuidv4 } from 'uuid'
 //     category: 'todo',
 //     tags: ['tag1', 'tag2'],
 //     priority: '0',
+//     assignedTo : [],
 // }
 
-const initialState = {
-    currentUser: {
-        "status": "success",
-        "message": "Login successful",
-        "body": {
-            "_id": "67e7fd68ea8f35c4d394ca23",
-            "username": "sid5",
-            "password": "$2b$10$TQpp86xsRrZUCHj3TCoEpOAMvktUkfWKZ/Vg68q2Hgoopyg6DyvIe",
-            "assignedTasks": [],
-            "__v": 0
-        }
-    },
+export const initialState = {
+    currentUser: null,
     tasks: {
         todo: [],
         inProgress: [],
@@ -79,6 +70,28 @@ const KanbanSlice = createSlice({
             })
             state.tasks[category].sort((a, b) => b.priority - a.priority)
         },
+        updateAssignedUsers: (state, action) => {
+            const { taskId, category, assignedTo } = action.payload
+            // console.log(taskId, userIds, category)
+            state.tasks[category] = state.tasks[category].map(task => (
+                task._id === taskId ? {
+                    ...task,
+                    assignedTo: assignedTo.map(u => (
+                        {
+                            _id: u._id,
+                            username: u.username
+                        }
+                    ))
+                } : task
+            ))
+        }
+
+
+
+
+
+
+
         // updateTask: (state, action) => {
         //     const { taskId, updates } = action.payload
         //     const categories = Object.keys(state.tasks)
@@ -88,10 +101,8 @@ const KanbanSlice = createSlice({
         //         ))
         //     })
         // },
-
-        
         // addTask: (state, action) => {
-            //     const tags = action.payload.tags.filter(ele => ele.trim().length > 0)
+        //     const tags = action.payload.tags.filter(ele => ele.trim().length > 0)
         //     state[action.payload.category].push(
         //         {
         //             ...action.payload,
@@ -128,7 +139,8 @@ export const {
     moveTask,
     setError,
     editTask,
-    setIsAssignPage
+    setIsAssignPage,
+    updateAssignedUsers,
 } = KanbanSlice.actions;
 
 export default KanbanSlice.reducer

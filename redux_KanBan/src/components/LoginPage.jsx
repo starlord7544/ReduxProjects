@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import api from '../api'
 import { setUser } from '../store/features/kanban/KanbanSlice'
 import { useDispatch } from 'react-redux'
@@ -18,8 +18,8 @@ const LoginPage = () => {
                 formData.get('username'),
                 formData.get('password')
             )
-
-            dispatch(setUser(data))
+            console.log(data)
+            dispatch(setUser(data.body))
             navigate('/')
         } catch (err) {
             console.log(err)
@@ -28,7 +28,7 @@ const LoginPage = () => {
     }
     return (
         // <div className="login-container">
-        <form className="login-form" onSubmit={handleSubmit}>
+        <form className="login-form" onSubmit={handleSubmit} onChange={() => setError('')}>
             <h2 className="login-title">Welcome Back</h2>
             <div className="input-group">
                 <label htmlFor="username">Username or Email</label>

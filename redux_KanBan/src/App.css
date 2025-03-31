@@ -616,7 +616,7 @@ button[type="button"] {
     background-color: rgba(244, 33, 46, 0.1);
     padding: 0.75rem;
     border-radius: 8px;
-    margin-bottom: 1rem;
+    margin-top: 1.2rem;
     font-size: 0.9rem;
     text-align: center;
 }

@@ -9,9 +9,9 @@ module.exports.getAllUsers = async (req, res) => {
             .lean();
 
         const formattedUsers = users.map(user => ({
-            id: user._id,
+            _id: user._id,
             username: user.username,
-            email: user.email
+            // email: user.email
         }));
 
         res.status(200).json({
@@ -36,22 +36,30 @@ module.exports.loginUser = async (req, res) => {
         // Find user
         const user = await User.findOne({ username });
         if (!user) {
-            res.status(401)
-            res.send({
+            return res.status(401).send({
                 status: 'fail',
                 message: 'User not found'
             })
         }
         const isPasswordValid = await bcrypt.compare(password, user.password);
         if (!isPasswordValid) {
-            throw new Error("Incorrect Password")
+            // throw new Error("Incorrect Password")
+            return res.status(404).send({
+                status: 'success',
+                message: 'Incorrect Password',
+            })
         }
+
+        const { _id } = user
 
         res.status(200)
         res.send({
             status: 'success',
             message: 'Login successful',
-            body: user,
+            body: {
+                username,
+                _id,
+            }
         })
     }
     catch (err) {
@@ -68,8 +76,8 @@ module.exports.registerUser = async (req, res) => {
         const { username, password } = req.body;
 
         if (!username || !password) {
-            res.status(400)
-            res.send({
+            console.log('Please provide username and password')
+            return res.status(400).send({
                 status: 'fail',
                 message: 'Please provide username and password'
             })
@@ -77,6 +85,7 @@ module.exports.registerUser = async (req, res) => {
 
         const existingUser = await User.findOne({ username });
         if (existingUser) {
+            console.log('Username already exists')
             return res.status(400).send({
                 status: 'fail',
                 message: 'Username already exists'

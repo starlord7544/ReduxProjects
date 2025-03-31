@@ -2,8 +2,6 @@ const Task = require('../model/taskSchema');
 
 module.exports.createTask = async (req, res) => {
     try {
-        console.log(req.body)
-    
         const { title, content, category, createdBy, priority, tags, assignedTo } = req.body;
         if (!title || !content || !category || !createdBy) {
             console.log('Missing required fields')
@@ -55,8 +53,7 @@ module.exports.getUserTasks = async (req, res) => {
     try {
         const userId = req.query.userId;
         if (!userId) {
-            res.status(400)
-            res.send({
+            return res.status(400).send({
                 status: 'fail',
                 message: 'User ID is required'
             })
@@ -89,10 +86,10 @@ module.exports.getUserTasks = async (req, res) => {
 module.exports.updateTask = async (req, res) => {
     try {
 
-        
+
         const taskId = req.params.id;
         const updates = req.body;
-        
+
         const allowedUpdates = ['title', 'content', 'tags', 'priority'];
         const isValidOperation = Object.keys(updates).every(update =>
             allowedUpdates.includes(update)
@@ -125,8 +122,7 @@ module.exports.updateTask = async (req, res) => {
         });
     } catch (error) {
         if (error.name === 'CastError') {
-            res.status(400)
-            res.send({
+            return res.status(400).send({
                 status: 'fail',
                 message: 'Invalid task ID format'
             });
@@ -147,8 +143,7 @@ module.exports.deleteTask = async (req, res) => {
         const deletedTask = await Task.findByIdAndDelete(taskId);
 
         if (!deletedTask) {
-            res.status(404)
-            res.send({
+            return res.status(404).send({
                 status: 'fail',
                 message: 'Task not found'
             });
@@ -163,8 +158,7 @@ module.exports.deleteTask = async (req, res) => {
 
     } catch (error) {
         if (error.name === 'CastError') {
-            res.status(400)
-            res.send({
+            return res.status(400).send({
                 status: 'fail',
                 message: 'Invalid task ID format'
             });
@@ -185,7 +179,7 @@ module.exports.moveTask = async (req, res) => {
 
         const validCategories = ['todo', 'inProgress', 'completed'];
         if (!validCategories.includes(newCategory)) {
-            returnres.status(400).send({
+            return res.status(400).send({
                 status: 'fail',
                 message: 'Invalid category. Allowed values: todo, inProgress, completed'
             });
@@ -198,8 +192,7 @@ module.exports.moveTask = async (req, res) => {
         );
 
         if (!movedTask) {
-            res.status(404)
-            res.send({
+            return res.status(404).send({
                 status: 'fail',
                 message: 'Task not found'
             });
@@ -234,45 +227,42 @@ module.exports.assignUsers = async (req, res) => {
         const { userIds } = req.body;
 
         if (!Array.isArray(userIds)) {
-            res.status(400)
-            res.send({
-                success: false,
-                message: 'User IDs must be provided as an array'
+            return res.status(400).send({
+                status: 'fail',
+                message: 'User IDs must be an array'
             });
         }
 
         const updatedTask = await Task.findByIdAndUpdate(
             taskId,
-            { $addToSet: { assignedTo: { $each: userIds } } },
-            { new: true, populate: { path: 'assignedTo', select: 'username' } }
-        );
+            { $set: { assignedTo: userIds } },
+            { new: true }
+        ).populate('assignedTo', 'username')
 
         if (!updatedTask) {
-            res.status(404)
-            res.send({
-                success: false,
+            return res.status(404).send({
+                status: 'fail',
                 message: 'Task not found'
             });
         }
 
         res.status(200)
         res.send({
-            success: true,
+            status: 'success',
             message: 'Users assigned successfully',
             task: updatedTask
         });
 
     } catch (error) {
         if (error.name === 'CastError') {
-            res.status(400)
-            res.send({
-                success: false,
+            return res.status(400).send({
+                status: 'fail',
                 message: 'Invalid ID format'
             });
         }
         res.status(500)
         res.send({
-            success: false,
+            status: 'fail',
             message: 'Assignment failed',
             error: error.message
         });

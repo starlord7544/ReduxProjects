@@ -21,7 +21,7 @@ const TaskInput = ({ category, setIsAdding }) => {
             category: category,
             tags: tags !== '' ? tags.split(',') : [],
             priority: priority,
-            createdBy: currentUser.body._id,
+            createdBy: currentUser._id,
             // assigned: assigned !== '' ? assigned.split(',') : [],
         }
 

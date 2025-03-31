@@ -13,17 +13,19 @@ const Container = () => {
 	useEffect(() => {
 		const fetchTasks = async () => {
 			try {
-				const { data } = await api.getTasks(currentUser.body._id)
+				const { data } = await api.getTasks(currentUser._id)
 				// console.log(data.tasks)
 				dispatch(setTasks(data.tasks))
 			} catch (err) {
 				dispatch(setError(err.response?.data?.message || 'Failed to load tasks'))
 			}
 		}
-		if (currentUser?.body?._id)
+		if (currentUser && currentUser._id)
 			fetchTasks()
-		else
+		else {
+			console.log(currentUser)
 			navigate('/login')
+		}
 	}, [currentUser, dispatch])
 
 

@@ -1,32 +1,40 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import api from '../api'
 
 const RegisterPage = () => {
     const navigate = useNavigate()
+    const [error, setError] = useState('')
+
     const handleSubmit = async (e) => {
         e.preventDefault()
 
-        const formData = new FormData(e.target)
-        const user = {
-            username: formData.get('username'),
-            password: formData.get('password')
-        }
-        const res = await fetch('http://localhost:6969/api/v1/users/register', {
-            method: 'POST',
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(user)
-        })
-        if (res.ok) {
+        try {
+            const formData = new FormData(e.target)
+            const res = await api.register(
+                formData.get('username'),
+                formData.get('password')
+            )
             e.target.reset
             navigate('/login')
+        } catch (err) {
+            console.log(err.response.data.message)
+            setError(err.response?.data?.message || 'Registration failed')
         }
+
+        // const res = await fetch('http://localhost:6969/api/v1/users/register', {
+        //     method: 'POST',
+        //     headers: { "Content-Type": "application/json" },
+        //     body: JSON.stringify(user)
+        // })
+        // if (res.ok) {
+        //     e.target.reset
+        //     navigate('/login')
+        // }
     }
     return (
-        <form className="login-form" onSubmit={handleSubmit}>
+        <form className="login-form" onSubmit={handleSubmit} onChange={() => setError('')}>
             <h2 className="login-title">Welcome To Kanban</h2>
-
-            {/* {error && <div className="login-error">{error}</div>} */}
-
             <div className="input-group">
                 <label htmlFor="username">Username or Email</label>
                 <input
@@ -55,6 +63,7 @@ const RegisterPage = () => {
                     Sign in
                 </Link>
             </div>
+            {error && <div className="login-error">{error}</div>}
         </form>
     )
 }
