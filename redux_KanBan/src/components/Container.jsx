@@ -1,25 +1,46 @@
-import React from 'react'
-import { useSelector } from 'react-redux'
+import React, { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import InnerContainer from './InnerContainer'
+import { setError, setTasks } from '../store/features/kanban/KanbanSlice'
+import { useNavigate } from 'react-router-dom'
+import api from '../api'
 
 const Container = () => {
+	const dispatch = useDispatch()
+	const navigate = useNavigate()
+	const { currentUser, tasks } = useSelector((state) => state.kanban)
 
-	const { completed, inProgress, todo } = useSelector((state) => state.kanban)
+	useEffect(() => {
+		const fetchTasks = async () => {
+			try {
+				const { data } = await api.getTasks(currentUser.body._id)
+				// console.log(data.tasks)
+				dispatch(setTasks(data.tasks))
+			} catch (err) {
+				dispatch(setError(err.response?.data?.message || 'Failed to load tasks'))
+			}
+		}
+		if (currentUser?.body?._id)
+			fetchTasks()
+		else
+			navigate('/login')
+	}, [currentUser, dispatch])
+
 
 	return (
 		<div className='container'>
 			<InnerContainer
-				Arr={todo}
+				Arr={tasks.todo}
 				Heading={'Todo'}
 				category={'todo'}
 			/>
 			<InnerContainer
-				Arr={inProgress}
+				Arr={tasks.inProgress}
 				Heading={'In-Progress'}
 				category={'inProgress'}
 			/>
 			<InnerContainer
-				Arr={completed}
+				Arr={tasks.completed}
 				Heading={'Completed'}
 				category={'completed'}
 			/>

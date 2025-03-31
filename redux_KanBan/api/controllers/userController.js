@@ -21,8 +21,8 @@ module.exports.getAllUsers = async (req, res) => {
         });
 
     } catch (error) {
-        res.status(500).json({
-            success: false,
+        res.status(500).send({
+            status: 'fail',
             message: 'Failed to fetch users',
             error: error.message
         });
@@ -77,8 +77,7 @@ module.exports.registerUser = async (req, res) => {
 
         const existingUser = await User.findOne({ username });
         if (existingUser) {
-            res.status(400)
-            res.send({
+            return res.status(400).send({
                 status: 'fail',
                 message: 'Username already exists'
             })

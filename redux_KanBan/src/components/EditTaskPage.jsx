@@ -2,32 +2,37 @@ import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import CancelIcon from '../assets/Cancel2.svg'
 import { editTask } from '../store/features/kanban/KanbanSlice'
+import api from '../api'
 
 const EditTaskPage = ({ task, setIsEditing }) => {
     const dispatch = useDispatch()
     const [priority, setPriority] = useState(task.priority)
 
-    const EditTask = (e) => {
+    const EditTask = async (e) => {
         e.preventDefault()
         const formData = new FormData(e.target)
         const tags = formData.get('tag').trim()
-        const assigned = formData.get('assigned').trim()
-        
+
         const EditedTask = {
             title: formData.get('title'),
             content: formData.get('content'),
             tags: tags !== '' ? tags.split(',') : [],
-            assigned: assigned !== '' ? assigned.split(',') : [],
-            category: task.category,
             priority: priority,
         }
-        setPriority(1)
-        dispatch(editTask({
-            taskId: task.id,
-            EditedTask
-        }))
-        e.target.reset()
-        setIsEditing(false)
+        try {
+            await api.updateTask(task._id, EditedTask)
+            setPriority(1)
+            dispatch(editTask({
+                taskId: task._id,
+                EditedTask,
+                category: task.category,
+
+            }))
+            e.target.reset()
+            setIsEditing(false)
+        } catch (err) {
+            console.error(err)
+        }
     }
 
     return (
@@ -61,14 +66,6 @@ const EditTaskPage = ({ task, setIsEditing }) => {
                     defaultValue={task.tags.join(',')}
                 />
                 <label htmlFor="taskAssigned">Assigned To (Optional): </label>
-                {/* <textarea
-                    name='assigned'
-                    type="text"
-                    id='taskAssigned'
-                    placeholder='Separated by commas'
-                    defaultValue={task.assigned.join(',')}
-                    rows={2}
-                /> */}
                 <div className="radio-container">
                     <span>Priority : </span>
                     <span>

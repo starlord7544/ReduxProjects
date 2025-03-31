@@ -1,14 +1,12 @@
 import React from 'react'
-import TaskInput from './TaskInput'
 import { Link, NavLink } from 'react-router-dom'
-import UserList from './UserList'
 
 const Header = () => {
     return (
         <header>
-            <h1>
+            <h2>
                 <Link to={'/'}>KanBan Board</Link>
-            </h1>
+            </h2>
             <NavLink
                 to={'/login'}
                 className={({ isActive }) =>

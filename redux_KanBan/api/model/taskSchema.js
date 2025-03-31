@@ -1,4 +1,3 @@
-const e = require('cors');
 const mongoose = require('mongoose');
 
 const taskSchema = new mongoose.Schema({
@@ -17,7 +16,7 @@ const taskSchema = new mongoose.Schema({
         default: 'todo'
     },
     priority: {
-        type : String,
+        type : Number,
         enum: [1,2,3],
         default: 1
     },
@@ -29,10 +28,10 @@ const taskSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
     },
-    assignedTo: {
+    assignedTo: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
-    },
+    }],
     createdAt: {
         type: Date,
         default: Date.now

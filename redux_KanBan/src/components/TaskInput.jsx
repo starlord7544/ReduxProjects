@@ -1,13 +1,16 @@
 import React, { useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { addTask } from '../store/features/kanban/KanbanSlice'
 import CancelIcon from '../assets/Cancel2.svg'
+import api from '../api'
+
 
 const TaskInput = ({ category, setIsAdding }) => {
     const dispatch = useDispatch()
     const [priority, setPriority] = useState(1)
+    const { currentUser } = useSelector(state => state.kanban)
 
-    const AddTask = (e) => {
+    const AddTask = async (e) => {
         e.preventDefault()
         const formData = new FormData(e.target)
         const tags = formData.get('tag').trim()
@@ -18,13 +21,25 @@ const TaskInput = ({ category, setIsAdding }) => {
             category: category,
             tags: tags !== '' ? tags.split(',') : [],
             priority: priority,
+            createdBy: currentUser.body._id,
             // assigned: assigned !== '' ? assigned.split(',') : [],
         }
+
+        try {
+            const { data } = await api.createTask(newTask)
+            // console.log(data)
+            dispatch(addTask(data.task))
+            setIsAdding(false)
+            setPriority(1)
+            e.target.reset()
+        } catch (err) {
+            console.error('Task creation failed:', err.message);
+        }
+
         // console.log(newTask)
-        setPriority(1)
-        dispatch(addTask(newTask))
-        e.target.reset()
-        setIsAdding(false)
+        // dispatch(addTask(newTask))
+        // e.target.reset()
+        // setIsAdding(false)
     }
 
     return (

@@ -7,12 +7,27 @@ import CancelIcon from '../assets/Cancel.svg'
 import EditTaskPage from './EditTaskPage'
 import AssignIcon from '../assets/Assign.svg'
 import UserList from './UserList'
+import api from '../api'
 
 const TaskBox = ({ task }) => {
     const [isEditing, setIsEditing] = useState(false)
-    const { title, tags, assigned, content, category, id, priority } = task
+    const { title, tags, assigned, content, category, _id, priority } = task
+    // console.log(title, tags, assigned, content, category, _id, priority)
     const dispatch = useDispatch()
     const assignPage = useSelector(state => state.kanban.assignPage)
+
+    const handleDelete = async () => {
+        try {
+            await api.deleteTask(_id)
+            dispatch(deleteTask({
+                taskId: _id,
+                category
+            }))
+        } catch (err) {
+            console.error('Delete Failed : ', err)
+        }
+    }
+
     return (
         <>
             {
@@ -24,7 +39,7 @@ const TaskBox = ({ task }) => {
                 onDragStart={(e) => {
                     const movingData = {
                         fromCategory: category,
-                        taskId: id
+                        taskId: _id
                     }
                     e.dataTransfer.setData('movingData', JSON.stringify(movingData))
                 }}
@@ -46,17 +61,14 @@ const TaskBox = ({ task }) => {
                 {/* <div className="task-btn-container"></div> */}
                 <div className="task-btns">
                     <img
-                        className='edit-btn'
+                        className={assignPage !== '' ? 'edit-btn disabled' : 'edit-btn'}
                         onClick={() => setIsEditing(true)}
                         src={EditIcon}
                         alt="edit"
                     />
                     <img
-                        className='del-btn'
-                        onClick={() => dispatch(deleteTask({
-                            taskId: id,
-                            category
-                        }))}
+                        className={assignPage !== '' ? 'del-btn disabled' : 'del-btn'}
+                        onClick={handleDelete}
                         src={Del}
                         alt='delete'
                     />
@@ -72,7 +84,7 @@ const TaskBox = ({ task }) => {
                                         onClick={() => {
                                             if (assignedIdx < 3)
                                                 return
-                                            dispatch(setIsAssignPage(assignPage === '' ? id : ''))
+                                            dispatch(setIsAssignPage(assignPage === '' ? _id : ''))
                                         }}
                                     >
                                         {assignedIdx < 3 ? ele.trim()[0] : '...'}
@@ -84,15 +96,15 @@ const TaskBox = ({ task }) => {
                         })
                     }
                     {
-                        assignPage === id && <UserList List={[]} filter={false} />
+                        assignPage === _id && <UserList List={[]} filter={false} />
                     }
                 </div>
                 <img
-                    src={(assignPage === id) ? CancelIcon : AssignIcon}
+                    src={(assignPage === _id) ? CancelIcon : AssignIcon}
                     alt="assign"
-                    className={(assignPage !== id && assignPage !== '') ? (`assign-btn disabled`) : ('assign-btn')}
+                    className={(assignPage !== _id && assignPage !== '') ? (`assign-btn disabled`) : ('assign-btn')}
                     onClick={() => {
-                        dispatch(setIsAssignPage(assignPage === '' ? id : ''))
+                        dispatch(setIsAssignPage(assignPage === '' ? _id : ''))
                     }}
                 />
             </div >

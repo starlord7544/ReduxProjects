@@ -2,10 +2,12 @@ const Task = require('../model/taskSchema');
 
 module.exports.createTask = async (req, res) => {
     try {
+        console.log(req.body)
+    
         const { title, content, category, createdBy, priority, tags, assignedTo } = req.body;
         if (!title || !content || !category || !createdBy) {
-            res.status(400)
-            res.send({
+            console.log('Missing required fields')
+            return res.status(400).send({
                 status: 'fail',
                 message: 'Missing required fields'
             })
@@ -13,8 +15,8 @@ module.exports.createTask = async (req, res) => {
 
         const validCategories = ['todo', 'inProgress', 'completed'];
         if (!validCategories.includes(category)) {
-            res.status(400)
-            res.send({
+            console.log('Invalid Category')
+            return res.status(400).send({
                 status: 'fail',
                 message: 'Invalid category'
             })
@@ -30,17 +32,17 @@ module.exports.createTask = async (req, res) => {
             assignedTo: assignedTo || []
         })
 
+        console.log('task created')
+
         res.status(200)
         res.send({
             status: 'success',
             message: 'Task created successfully',
             task: newTask
         })
-
-
     } catch (err) {
-        res.status(404);
-        res
+        console.log(err.message)
+        res.status(404)
         res.send({
             status: 'fail',
             message: 'Task creation failed',
@@ -86,17 +88,18 @@ module.exports.getUserTasks = async (req, res) => {
 
 module.exports.updateTask = async (req, res) => {
     try {
+
+        
         const taskId = req.params.id;
         const updates = req.body;
-
+        
         const allowedUpdates = ['title', 'content', 'tags', 'priority'];
         const isValidOperation = Object.keys(updates).every(update =>
             allowedUpdates.includes(update)
         );
 
         if (!isValidOperation) {
-            res.status(400)
-            res.send({
+            return res.status(400).send({
                 status: 'fail',
                 message: 'Invalid updates! Only title, content, tags, and priority can be updated'
             });
@@ -108,8 +111,7 @@ module.exports.updateTask = async (req, res) => {
         });
 
         if (!updatedTask) {
-            res.status(404)
-            res.send({
+            return res.status(404).send({
                 status: 'fail',
                 message: 'Task not found'
             });
@@ -183,8 +185,7 @@ module.exports.moveTask = async (req, res) => {
 
         const validCategories = ['todo', 'inProgress', 'completed'];
         if (!validCategories.includes(newCategory)) {
-            res.status(400)
-            res.send({
+            returnres.status(400).send({
                 status: 'fail',
                 message: 'Invalid category. Allowed values: todo, inProgress, completed'
             });
@@ -213,8 +214,7 @@ module.exports.moveTask = async (req, res) => {
 
     } catch (error) {
         if (error.name === 'CastError') {
-            res.status(400)
-            res.send({
+            return res.status(400).send({
                 status: 'fail',
                 message: 'Invalid task ID format'
             });
@@ -244,7 +244,7 @@ module.exports.assignUsers = async (req, res) => {
         const updatedTask = await Task.findByIdAndUpdate(
             taskId,
             { $addToSet: { assignedTo: { $each: userIds } } },
-            { new: true, populate: 'assignedTo' }
+            { new: true, populate: { path: 'assignedTo', select: 'username' } }
         );
 
         if (!updatedTask) {
