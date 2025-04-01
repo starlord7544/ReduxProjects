@@ -1,4 +1,3 @@
-const { compose } = require('@reduxjs/toolkit');
 const User = require('../model/userSchema');
 const bcrypt = require('bcryptjs');
 
