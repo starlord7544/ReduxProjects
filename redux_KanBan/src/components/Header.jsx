@@ -1,6 +1,6 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Link, NavLink } from 'react-router-dom'
+import { Link, NavLink, useNavigate } from 'react-router-dom'
 import { setIsAssignedView, setUser } from '../store/features/kanban/KanbanSlice'
 import LogoutIcon from '../assets/Logout.svg'
 
