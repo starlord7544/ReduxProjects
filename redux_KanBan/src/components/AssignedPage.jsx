@@ -3,8 +3,10 @@ import InnerContainer from './InnerContainer'
 import { useDispatch, useSelector } from 'react-redux'
 import api from '../api'
 import { setAssignedTasks } from '../store/features/kanban/KanbanSlice'
+import { useNavigate } from 'react-router-dom'
 
 const AssignedPage = () => {
+    const navigate = useNavigate()
     const dispatch = useDispatch()
     const { currentUser, assignedTasks } = useSelector(state => state.kanban)
 
@@ -21,7 +23,7 @@ const AssignedPage = () => {
         if (currentUser && currentUser._id)
             loadAssignedTasks()
         else
-            loadAssignedTasks()
+            navigate('/login')
     }, [currentUser, dispatch])
 
     return (

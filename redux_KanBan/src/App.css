@@ -93,6 +93,9 @@ header a {
     font-size: 1.1rem;
     text-transform: uppercase;
     letter-spacing: 0.05em;
+    height: 30px;
+    display: flex;
+    align-items: center;
 }
 
 .inner-container .top {
