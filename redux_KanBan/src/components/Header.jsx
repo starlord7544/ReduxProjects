@@ -7,6 +7,7 @@ import LogoutIcon from '../assets/Logout.svg'
 const Header = () => {
     const { currentUser } = useSelector(state => state.kanban)
     const dispatch = useDispatch()
+    const navigate = useNavigate()
     return (
         <header>
             <h2>
@@ -40,7 +41,7 @@ const Header = () => {
                                 alt="logout"
                                 onClick={() => {
                                     dispatch(setUser(null))
-                                    navigator('/login')
+                                    navigate('/login')
                                 }}
                             />
                         </>
