@@ -14,8 +14,10 @@ const InnerContainer = ({ Arr, Heading, category }) => {
 
     const handleMoveTask = async (taskId, fromCategory, toCategory) => {
         try {
+            dispatch(moveTask(
+                { taskId, fromCategory, toCategory }
+            ))
             await api.moveTask(taskId, toCategory)
-            dispatch(moveTask({ taskId, fromCategory, toCategory }))
         } catch (err) {
             console.error('Move failed : ', err.response?.data?.message)
             dispatch(moveTask({
@@ -36,7 +38,7 @@ const InnerContainer = ({ Arr, Heading, category }) => {
                     const { fromCategory, taskId } = JSON.parse(e.dataTransfer.getData('movingData'))
                     if (fromCategory === category)
                         return
-                    console.log('moving', taskId, 'from : ', fromCategory, ' to : ', category)
+                    // console.log('moving', taskId, 'from : ', fromCategory, ' to : ', category)
                     // dispatch(moveTask({ taskId, fromCategory, toCategory: category }))
                     handleMoveTask(taskId, fromCategory, category)
                 }}

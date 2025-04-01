@@ -21,16 +21,6 @@ const RegisterPage = () => {
             console.log(err.response.data.message)
             setError(err.response?.data?.message || 'Registration failed')
         }
-
-        // const res = await fetch('http://localhost:6969/api/v1/users/register', {
-        //     method: 'POST',
-        //     headers: { "Content-Type": "application/json" },
-        //     body: JSON.stringify(user)
-        // })
-        // if (res.ok) {
-        //     e.target.reset
-        //     navigate('/login')
-        // }
     }
     return (
         <form className="login-form" onSubmit={handleSubmit} onChange={() => setError('')}>
