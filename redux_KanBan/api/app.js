@@ -12,4 +12,8 @@ app.use(cors())
 app.use('/api/v1/users', userRouter)
 app.use('/api/v1/tasks', taskRouter)
 
+app.get("/ping", (req, res) => {
+    res.send("Server is alive");
+});
+
 module.exports = app
