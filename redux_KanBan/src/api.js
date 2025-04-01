@@ -1,7 +1,8 @@
 import axios from 'axios';
 
 const api = axios.create({
-    baseURL: 'http://localhost:6969/api/v1',
+    // baseURL: 'http://localhost:6969/api/v1',
+    baseURL: 'https://reduxprojects.onrender.com/api/v1',
 });
 
 export default {
