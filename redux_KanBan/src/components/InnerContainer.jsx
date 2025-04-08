@@ -33,6 +33,7 @@ const InnerContainer = ({ Arr, Heading, category }) => {
             }
             <div
                 className={`inner-container ${category}`}
+                data-category={category}
                 onDragOver={(e) => { e.preventDefault() }}
                 onDrop={(e) => {
                     const { fromCategory, taskId } = JSON.parse(e.dataTransfer.getData('movingData'))

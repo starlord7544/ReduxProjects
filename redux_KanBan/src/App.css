@@ -54,7 +54,8 @@ header .pages {
     /* width: 340px; */
 }
 
-header .pages a, header .pages img {
+header .pages a,
+header .pages img {
     margin: 5px 0;
 }
 
@@ -91,6 +92,7 @@ header a {
 .link:hover {
     box-shadow: 0px 0px 3px #1990da86;
 }
+
 .pages img:hover {
     box-shadow: 0px 0px 3px #1990da86;
     border-radius: 5px;
@@ -680,6 +682,23 @@ button[type="button"] {
     pointer-events: none;
 }
 
+.task-container {
+    transition: transform 0.2s ease;
+    touch-action: none;
+    /* Prevent browser touch actions */
+    user-select: none;
+    /* Prevent text selection */
+    position: relative;
+    /* For smooth translation */
+    z-index: 1;
+    /* Ensure dragging item stays on top */
+}
+
+.task-container.dragging {
+    opacity: 0.8;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
 @media (max-width: 768px) {
     .container {
         grid-template-columns: 1fr;
@@ -695,9 +714,11 @@ button[type="button"] {
     .heading {
         display: none;
     }
+
     .pages {
         width: 100%;
     }
+
     form.form {
         padding: 1.5rem;
     }

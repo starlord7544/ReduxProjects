@@ -18,6 +18,51 @@ const TaskBox = ({ task, handleMoveTask }) => {
     const { isAssignedView } = useSelector(state => state.kanban)
     const assignPage = useSelector(state => state.kanban.assignPage)
 
+    const [touchStart, setTouchStart] = useState(null);
+    const [touchOffset, setTouchOffset] = useState({ x: 0, y: 0 });
+
+
+    const handleTouchStart = (e) => {
+        e.preventDefault();
+        setTouchStart({
+            x: e.touches[0].clientX,
+            y: e.touches[0].clientY,
+            time: Date.now()
+        });
+    }
+
+
+    const handleTouchMove = (e) => {
+        if (!touchStart) return;
+
+        const deltaX = e.touches[0].clientX - touchStart.x;
+        const deltaY = e.touches[0].clientY - touchStart.y;
+
+        setTouchOffset({ x: deltaX, y: deltaY });
+        e.preventDefault();
+    };
+
+    const handleTouchEnd = (e) => {
+        if (!touchStart) return;
+
+        // Get final touch position
+        const endX = e.changedTouches[0].clientX;
+        const endY = e.changedTouches[0].clientY;
+
+        // Find drop target container
+        const targetElement = document.elementFromPoint(endX, endY);
+        const container = targetElement?.closest('.inner-container');
+
+        if (container && container.dataset.category !== category) {
+            handleMoveTask(_id, category, container.dataset.category);
+        }
+
+        // Reset touch state
+        setTouchStart(null);
+        setTouchOffset({ x: 0, y: 0 });
+        e.preventDefault();
+    };
+
     const handleDelete = async () => {
         try {
             dispatch(deleteTask({
@@ -30,30 +75,6 @@ const TaskBox = ({ task, handleMoveTask }) => {
         }
     }
 
-    const handleTouchStart = (e) => {
-        e.currentTarget.dataset.touchStartX = e.touches[0].clientX
-        e.currentTarget.dataset.touchStartY = e.touches[0].clientY
-
-        e.currentTarget.dataset.taskId = _id
-        e.currentTarget.dataset.fromCategory = category
-    }
-    const handleTouchEnd = () => {
-        const touch = e.changedTouches[0]
-        const x = touch.clientX
-        const y = touch.clientY
-
-        const element = document.elementFromPoint(x, y)
-
-        if (element?.closest('.inner-container')) {
-            const toCategory = element.closest('.inner-container').classList[1]
-            const { taskId, fromCategory } = e.currentTarget.dataset
-
-            if (toCategory && fromCategory !== toCategory)
-                handleMoveTask(taskId, fromCategory, toCategory)
-        }
-
-    }
-
     return (
         <>
             {
@@ -61,6 +82,11 @@ const TaskBox = ({ task, handleMoveTask }) => {
             }
             <div
                 className="task-container"
+                style={{
+                    transform: `translate(${touchOffset.x}px, ${touchOffset.y}px)`,
+                    transition: touchStart ? 'none' : 'transform 0.3s ease',
+                    touchAction: 'none'
+                }}
                 draggable={true}
                 onDragStart={(e) => {
                     const movingData = {
@@ -69,8 +95,10 @@ const TaskBox = ({ task, handleMoveTask }) => {
                     }
                     e.dataTransfer.setData('movingData', JSON.stringify(movingData))
                 }}
-                onTouchStart={handleTouchStart}
-                onTouchEnd={handleTouchEnd}
+                onTouchStart={(e) => handleTouchStart(e)}
+                onTouchMove={(e) => handleTouchMove(e)}
+                onTouchEnd={(e) => handleTouchEnd(e)}
+                onTouchCancel={(e) => handleTouchEnd(e)}
             >
                 <div className="title-container">
                     <div className={`task-priority ${priority && priority === 1 ? ('low') : (priority === 2 ? 'mid' : 'high')}`}></div>
