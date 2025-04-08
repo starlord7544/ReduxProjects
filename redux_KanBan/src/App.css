@@ -206,6 +206,19 @@ header a {
     border: 1px solid var(--border-color);
     transition: transform 0.2s ease;
     position: relative;
+    transition: transform 0.2s ease;
+    touch-action: none;
+    /* Prevent browser touch actions */
+    user-select: none;
+    /* Prevent text selection */
+    position: relative;
+    /* For smooth translation */
+    z-index: 100;
+}
+
+.task-container.dragging {
+    opacity: 0.8;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 .task-container:hover {
@@ -682,22 +695,6 @@ button[type="button"] {
     pointer-events: none;
 }
 
-.task-container {
-    transition: transform 0.2s ease;
-    touch-action: none;
-    /* Prevent browser touch actions */
-    user-select: none;
-    /* Prevent text selection */
-    position: relative;
-    /* For smooth translation */
-    z-index: 1;
-    /* Ensure dragging item stays on top */
-}
-
-.task-container.dragging {
-    opacity: 0.8;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-}
 
 @media (max-width: 768px) {
     .container {
