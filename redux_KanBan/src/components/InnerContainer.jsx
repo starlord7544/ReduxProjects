@@ -62,7 +62,7 @@ const InnerContainer = ({ Arr, Heading, category }) => {
                 </div>
                 {
                     Arr.map((task) => (
-                        <TaskBox task={task} key={task._id} category={category} />
+                        <TaskBox task={task} key={task._id} category={category} handleMoveTask={handleMoveTask} />
                     ))
                 }
             </div>

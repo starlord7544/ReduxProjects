@@ -8,8 +8,9 @@ import EditTaskPage from './EditTaskPage'
 import AssignIcon from '../assets/Assign.svg'
 import UserList from './UserList'
 import api from '../api'
+import e from 'cors'
 
-const TaskBox = ({ task }) => {
+const TaskBox = ({ task, handleMoveTask }) => {
     const [isEditing, setIsEditing] = useState(false)
     const { title, tags, assignedTo, content, category, _id, priority } = task
     // console.log(title, tags, assignedTo, content, category, _id, priority)
@@ -29,6 +30,30 @@ const TaskBox = ({ task }) => {
         }
     }
 
+    const handleTouchStart = (e) => {
+        e.currentTarget.dataset.touchStartX = e.touches[0].clientX
+        e.currentTarget.dataset.touchStartY = e.touches[0].clientY
+
+        e.currentTarget.dataset.taskId = _id
+        e.currentTarget.dataset.fromCategory = category
+    }
+    const handleTouchEnd = () => {
+        const touch = e.changedTouches[0]
+        const x = touch.clientX
+        const y = touch.clientY
+
+        const element = document.elementFromPoint(x, y)
+
+        if (element?.closest('.inner-container')) {
+            const toCategory = element.closest('.inner-container').classList[1]
+            const { taskId, fromCategory } = e.currentTarget.dataset
+
+            if (toCategory && fromCategory !== toCategory)
+                handleMoveTask(taskId, fromCategory, toCategory)
+        }
+
+    }
+
     return (
         <>
             {
@@ -44,6 +69,8 @@ const TaskBox = ({ task }) => {
                     }
                     e.dataTransfer.setData('movingData', JSON.stringify(movingData))
                 }}
+                onTouchStart={handleTouchStart}
+                onTouchEnd={handleTouchEnd}
             >
                 <div className="title-container">
                     <div className={`task-priority ${priority && priority === 1 ? ('low') : (priority === 2 ? 'mid' : 'high')}`}></div>
@@ -68,7 +95,7 @@ const TaskBox = ({ task }) => {
                         alt="edit"
                     />
                     {
-                        
+
                         !isAssignedView && (
                             <img
                                 className={assignPage !== '' ? 'del-btn disabled' : 'del-btn'}

@@ -24,13 +24,17 @@ export const initialState = {
     },
     error: null,
     isAssignedView: false,
-    assignPage: ''
+    assignPage: '',
+    sortBy: 'priority'
 }
 
 const KanbanSlice = createSlice({
     name: 'kanban',
     initialState,
     reducers: {
+        setSortby: (state, action) => {
+            state.sortBy = action.payload
+        },
         setIsAssignedView: (state, action) => {
             state.isAssignedView = action.payload
         },
@@ -43,6 +47,10 @@ const KanbanSlice = createSlice({
         addTask: (state, action) => {
             state.tasks[action.payload.category].push(action.payload)
             state.tasks[action.payload.category].sort((a, b) => b.priority - a.priority)
+            // if (state.sortBy === 'priority')
+            //     state.tasks[action.payload.category].sort((a, b) => b.priority - a.priority)
+            // if (state.sortBy === 'date')
+            //     state.tasks[action.payload.category].sort((a, b) => b.createdAt - a.createdAt)
         },
         deleteTask: (state, action) => {
             const { taskId, category } = action.payload
@@ -199,7 +207,8 @@ export const {
     setIsAssignPage,
     updateAssignedUsers,
     setAssignedTasks,
-    setIsAssignedView
+    setIsAssignedView,
+    setSortby
 } = KanbanSlice.actions;
 
 export default KanbanSlice.reducer
