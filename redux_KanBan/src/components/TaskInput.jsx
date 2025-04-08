@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { addTask } from '../store/features/kanban/KanbanSlice'
 import CancelIcon from '../assets/Cancel2.svg'
@@ -9,12 +9,13 @@ const TaskInput = ({ category, setIsAdding }) => {
     const dispatch = useDispatch()
     const [priority, setPriority] = useState(1)
     const { currentUser } = useSelector(state => state.kanban)
+    const [loading, setLoading] = useState(false)
 
     const AddTask = async (e) => {
         e.preventDefault()
+        setLoading(true)
         const formData = new FormData(e.target)
         const tags = formData.get('tag').trim()
-        // const assigned = formData.get('assigned').trim()
         const newTask = {
             title: formData.get('title'),
             content: formData.get('content'),
@@ -22,24 +23,19 @@ const TaskInput = ({ category, setIsAdding }) => {
             tags: tags !== '' ? tags.split(',') : [],
             priority: priority,
             createdBy: currentUser._id,
-            // assigned: assigned !== '' ? assigned.split(',') : [],
         }
 
         try {
+
             const { data } = await api.createTask(newTask)
-            // console.log(data)
             dispatch(addTask(data.task))
             setIsAdding(false)
             setPriority(1)
+            setLoading(false)
             e.target.reset()
         } catch (err) {
             console.error('Task creation failed:', err.message);
         }
-
-        // console.log(newTask)
-        // dispatch(addTask(newTask))
-        // e.target.reset()
-        // setIsAdding(false)
     }
 
     return (
@@ -70,14 +66,6 @@ const TaskInput = ({ category, setIsAdding }) => {
                     placeholder='Separated by commas'
                     rows={2}
                 />
-                {/* <label htmlFor="taskAssigned">Assigned To (Optional): </label>
-                <textarea
-                    name='assigned'
-                    type="text"
-                    id='taskAssigned'
-                    placeholder='Separated by commas'
-                    rows={2}
-                /> */}
                 <div className="radio-container">
                     <span>Priority : </span>
                     <span>
@@ -87,8 +75,8 @@ const TaskInput = ({ category, setIsAdding }) => {
                     </span>
                 </div>
                 <div className="btn-container">
-                    <button type="submit" title='Add Task' >Add task</button>
-                    <img src={CancelIcon} alt="cancel" className='icon' onClick={(e) => setIsAdding(false)} />
+                    <button type="submit" title='Add Task' className={loading ? 'disabled' : ''} >{loading ? 'Adding Task' : 'Add Task'}</button>
+                    <img src={CancelIcon} alt="cancel" className='icon' onClick={() => setIsAdding(false)} />
                 </div>
             </form>
         </div>

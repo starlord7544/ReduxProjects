@@ -7,9 +7,11 @@ import api from '../api'
 const EditTaskPage = ({ task, setIsEditing }) => {
     const dispatch = useDispatch()
     const [priority, setPriority] = useState(task.priority)
+    const [loading, setLoading] = useState(false)
 
     const EditTask = async (e) => {
         e.preventDefault()
+        setLoading(true)
         const formData = new FormData(e.target)
         const tags = formData.get('tag').trim()
 
@@ -25,10 +27,10 @@ const EditTaskPage = ({ task, setIsEditing }) => {
                 taskId: task._id,
                 EditedTask,
                 category: task.category,
-                
             }))
             setPriority(1)
             setIsEditing(false)
+            setLoading(false)
             e.target.reset()
         } catch (err) {
             console.error(err)
@@ -94,7 +96,7 @@ const EditTaskPage = ({ task, setIsEditing }) => {
                 </div>
                 <br />
                 <div className="btn-container">
-                    <button type="submit" title='Edit Task' >Edit task</button>
+                    <button type="submit" title='Edit Task' className={loading ? 'disabled' : ''} >{loading ? 'Saving ...' : 'Edit Task'}</button>
                     <img src={CancelIcon} alt="cancel" className='icon' onClick={(e) => setIsEditing(false)} />
                 </div>
             </form>

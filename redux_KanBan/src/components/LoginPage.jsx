@@ -6,13 +6,14 @@ import { useDispatch } from 'react-redux'
 
 const LoginPage = () => {
     const [error, setError] = useState('')
+    const [loading, setLoading] = useState(false)
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
     const handleSubmit = async (e) => {
         e.preventDefault()
+        setLoading(true)
         const formData = new FormData(e.target)
-
         try {
             const { data } = await api.login(
                 formData.get('username'),
@@ -20,10 +21,12 @@ const LoginPage = () => {
             )
             console.log(data)
             dispatch(setUser(data.body))
+            setLoading(false)
             navigate('/')
         } catch (err) {
             console.log(err)
             setError(err.response?.data?.message || 'Login failed')
+            setLoading(false)
         }
     }
     return (
@@ -31,11 +34,12 @@ const LoginPage = () => {
         <form className="login-form" onSubmit={handleSubmit} onChange={() => setError('')}>
             <h2 className="login-title">Welcome Back</h2>
             <div className="input-group">
-                <label htmlFor="username">Username or Email</label>
+                <label htmlFor="username">Username</label>
                 <input
                     type="text"
                     id="username"
                     name='username'
+                    autoFocus
                 />
             </div>
 
@@ -49,7 +53,7 @@ const LoginPage = () => {
             </div>
 
             <button type="submit" className="login-button">
-                Log In
+                {loading ? 'Verifying ...' : 'Log In'}
             </button>
 
             <div className="login-footer">

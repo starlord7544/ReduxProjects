@@ -16,16 +16,6 @@ const userSchema = mongoose.Schema({
         ref: 'Task',
         index : true
     }]
-    // email: {
-    //     type: String,
-    //     unique: true,
-    //     trim: true,
-    //     sparse: true,
-    // },
-    // createdAt: {
-    //     type: Date,
-    //     default: Date.now
-    // }
 })
 
 const User = mongoose.model('User', userSchema)

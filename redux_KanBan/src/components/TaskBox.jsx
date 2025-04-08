@@ -19,11 +19,11 @@ const TaskBox = ({ task }) => {
 
     const handleDelete = async () => {
         try {
-            await api.deleteTask(_id)
             dispatch(deleteTask({
                 taskId: _id,
                 category
             }))
+            await api.deleteTask(_id)
         } catch (err) {
             console.error('Delete Failed : ', err)
         }
