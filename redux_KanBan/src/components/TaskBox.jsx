@@ -23,7 +23,7 @@ const TaskBox = ({ task, handleMoveTask }) => {
 
 
     const handleTouchStart = (e) => {
-        e.preventDefault();
+        // e.preventDefault();
         setTouchStart({
             x: e.touches[0].clientX,
             y: e.touches[0].clientY,
@@ -39,17 +39,15 @@ const TaskBox = ({ task, handleMoveTask }) => {
         const deltaY = e.touches[0].clientY - touchStart.y;
 
         setTouchOffset({ x: deltaX, y: deltaY });
-        e.preventDefault();
+        // e.preventDefault();
     };
 
     const handleTouchEnd = (e) => {
         if (!touchStart) return;
 
-        // Get final touch position
         const endX = e.changedTouches[0].clientX;
         const endY = e.changedTouches[0].clientY;
 
-        // Find drop target container
         const targetElement = document.elementFromPoint(endX, endY);
         const container = targetElement?.closest('.inner-container');
 
@@ -57,7 +55,6 @@ const TaskBox = ({ task, handleMoveTask }) => {
             handleMoveTask(_id, category, container.dataset.category);
         }
 
-        // Reset touch state
         setTouchStart(null);
         setTouchOffset({ x: 0, y: 0 });
         e.preventDefault();
@@ -85,7 +82,8 @@ const TaskBox = ({ task, handleMoveTask }) => {
                 style={{
                     transform: `translate(${touchOffset.x}px, ${touchOffset.y}px)`,
                     transition: touchStart ? 'none' : 'transform 0.3s ease',
-                    touchAction: 'none'
+                    touchAction: 'none',
+                    zIndex: 999,
                 }}
                 draggable={true}
                 onDragStart={(e) => {
