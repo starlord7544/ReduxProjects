@@ -114,6 +114,7 @@ header a {
     overflow: scroll;
     -ms-overflow-style: none;
     scrollbar-width: none;
+    z-index: 9;
 }
 
 .inner-container h2 {
@@ -213,12 +214,16 @@ header a {
     /* Prevent text selection */
     position: relative;
     /* For smooth translation */
-    z-index: 100;
+    z-index: 15;
+    transition: transform 0.2s ease, z-index 0.2s ease;
 }
 
 .task-container.dragging {
+    z-index: 9999;
+    transform: scale(1.02);
+    /* box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); */
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
     opacity: 0.8;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 .task-container:hover {
@@ -604,7 +609,7 @@ button[type="button"] {
     right: 35px;
     /* top: 0; */
     bottom: -90px;
-    z-index: 10;
+    z-index: 20;
     transform: scale(0.9);
 }
 
@@ -694,6 +699,7 @@ button[type="button"] {
     opacity: 0.3;
     pointer-events: none;
 }
+
 
 
 @media (max-width: 768px) {
