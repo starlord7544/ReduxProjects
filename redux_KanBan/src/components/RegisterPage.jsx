@@ -5,19 +5,26 @@ import api from '../api'
 const RegisterPage = () => {
     const navigate = useNavigate()
     const [error, setError] = useState('')
+    const [loading, setLoading] = useState('')
+
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-
+        setLoading(true)
         try {
             const formData = new FormData(e.target)
             const res = await api.register(
                 formData.get('username'),
                 formData.get('password')
             )
-            e.target.reset
-            navigate('/login')
+            e.target.reset()
+            setLoading(false)
+            if (res.data.status === 'success') {
+                alert('account created')
+                navigate('/login')
+            }
         } catch (err) {
+            setLoading(false)
             console.log(err.response.data.message)
             setError(err.response?.data?.message || 'Registration failed')
         }
@@ -26,11 +33,12 @@ const RegisterPage = () => {
         <form className="login-form" onSubmit={handleSubmit} onChange={() => setError('')}>
             <h2 className="login-title">Welcome To Kanban</h2>
             <div className="input-group">
-                <label htmlFor="username">Username or Email</label>
+                <label htmlFor="username">Username</label>
                 <input
                     type="text"
                     id="username"
                     name='username'
+                    autoFocus
                 />
             </div>
 
@@ -44,7 +52,7 @@ const RegisterPage = () => {
             </div>
 
             <button type="submit" className="login-button">
-                Sign Up
+                {loading ? 'Creating Account ...' : 'Sign Up'}
             </button>
 
             <div className="login-footer">
