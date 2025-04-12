@@ -10,7 +10,7 @@ const Header = () => {
     const navigate = useNavigate()
     return (
         <header>
-            <h2>
+            <h2 className='heading'>
                 <Link to={'/'}>KanBan Board</Link>
             </h2>
             <div className="pages">

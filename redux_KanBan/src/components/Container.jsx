@@ -4,6 +4,7 @@ import InnerContainer from './InnerContainer'
 import { setError, setTasks } from '../store/features/kanban/KanbanSlice'
 import { useNavigate } from 'react-router-dom'
 import api from '../api'
+import GhostTask from './GhostTask'
 
 const Container = () => {
 	const dispatch = useDispatch()
@@ -30,23 +31,26 @@ const Container = () => {
 
 
 	return (
-		<div className='container'>
-			<InnerContainer
-				Arr={tasks.todo}
-				Heading={'Todo'}
-				category={'todo'}
-			/>
-			<InnerContainer
-				Arr={tasks.inProgress}
-				Heading={'In-Progress'}
-				category={'inProgress'}
-			/>
-			<InnerContainer
-				Arr={tasks.completed}
-				Heading={'Completed'}
-				category={'completed'}
-			/>
-		</div>
+		<>
+			<div className='container'>
+				<InnerContainer
+					Arr={tasks.todo}
+					Heading={'Todo'}
+					category={'todo'}
+				/>
+				<InnerContainer
+					Arr={tasks.inProgress}
+					Heading={'In-Progress'}
+					category={'inProgress'}
+				/>
+				<InnerContainer
+					Arr={tasks.completed}
+					Heading={'Completed'}
+					category={'completed'}
+				/>
+			</div>
+			<GhostTask />
+		</>
 	)
 }
 
