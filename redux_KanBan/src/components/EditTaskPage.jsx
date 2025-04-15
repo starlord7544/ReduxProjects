@@ -3,8 +3,10 @@ import { useDispatch } from 'react-redux'
 import CancelIcon from '../assets/Cancel2.svg'
 import { editTask } from '../store/features/kanban/KanbanSlice'
 import api from '../api'
+import { useNavigate } from 'react-router-dom'
 
 const EditTaskPage = ({ task, setIsEditing }) => {
+    const navigate = useNavigate()
     const dispatch = useDispatch()
     const [priority, setPriority] = useState(task.priority)
 
@@ -32,6 +34,7 @@ const EditTaskPage = ({ task, setIsEditing }) => {
             e.target.reset()
         } catch (err) {
             console.error(err)
+            navigate(`/404`)
         }
     }
 

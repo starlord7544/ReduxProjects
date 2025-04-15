@@ -3,10 +3,12 @@ import { useDispatch, useSelector } from 'react-redux'
 import { addTask } from '../store/features/kanban/KanbanSlice'
 import CancelIcon from '../assets/Cancel2.svg'
 import api from '../api'
+import { useNavigate } from 'react-router-dom'
 
 
 const TaskInput = ({ category, setIsAdding }) => {
     const dispatch = useDispatch()
+    const navigate = useNavigate()
     const [priority, setPriority] = useState(1)
     const { currentUser } = useSelector(state => state.kanban)
 
@@ -27,19 +29,14 @@ const TaskInput = ({ category, setIsAdding }) => {
 
         try {
             const { data } = await api.createTask(newTask)
-            // console.log(data)
             dispatch(addTask(data.task))
             setIsAdding(false)
             setPriority(1)
             e.target.reset()
         } catch (err) {
             console.error('Task creation failed:', err.message);
+            navigate(`/404`)
         }
-
-        // console.log(newTask)
-        // dispatch(addTask(newTask))
-        // e.target.reset()
-        // setIsAdding(false)
     }
 
     return (

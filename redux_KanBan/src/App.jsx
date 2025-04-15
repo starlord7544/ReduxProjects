@@ -1,8 +1,7 @@
 import './App.css'
-import { Container, LoginPage, RegisterPage, UserList } from './components'
+import { AssignedPage, Container, ErrorPage, LoginPage, RegisterPage } from './components'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import Layout from './layout/Layout'
-import AssignedPage from './components/AssignedPage'
 
 function App() {
 
@@ -15,6 +14,7 @@ function App() {
 						<Route path='login' element={<LoginPage />} />
 						<Route path='register' element={<RegisterPage />} />
 						<Route path='assigned' element={<AssignedPage />} />
+						<Route path='404' element={<ErrorPage />} />
 					</Route>
 				</Routes>
 			</Router>

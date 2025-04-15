@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux';
 import { updateAssignedUsers } from '../store/features/kanban/KanbanSlice';
 import api from '../api';
+import { useNavigate } from 'react-router-dom';
 
 const UserList = ({ taskId, initialAssigned, category }) => {
     const [allUsers, setAllUsers] = useState([]);
@@ -11,6 +12,7 @@ const UserList = ({ taskId, initialAssigned, category }) => {
     )
     const [searchInput, setSearchInput] = useState('')
     const dispatch = useDispatch();
+    const navigate = useNavigate()
 
     useEffect(() => {
         const fetchUsers = async () => {
@@ -20,6 +22,7 @@ const UserList = ({ taskId, initialAssigned, category }) => {
                 // console.log(res.data.users)
             } catch (err) {
                 console.error('Failed to fetch users : ', err)
+                navigate(`/404`)
             }
         }
         fetchUsers()
@@ -51,6 +54,7 @@ const UserList = ({ taskId, initialAssigned, category }) => {
         } catch (err) {
             console.error('Assignment failed:', err);
             setSelectedUsers([...selectedUsers])
+            navigate(`/404`)
         }
     }
 

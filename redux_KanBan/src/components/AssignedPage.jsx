@@ -17,8 +17,8 @@ const AssignedPage = () => {
                 dispatch(setAssignedTasks(res.data.tasks))
             } catch (err) {
                 console.error('Failed to load assigned tasks:', err);
+                navigate(`/404`)
             }
-
         }
         if (currentUser && currentUser._id)
             loadAssignedTasks()

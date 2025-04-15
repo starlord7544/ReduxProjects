@@ -672,26 +672,17 @@ button[type="button"] {
     color: var(--text-primary);
     position: absolute;
     z-index: 9999;
-    width: 250px; /* Adjust if needed */
-    /* transition: all 0.2s ease; */
+    width: 250px; 
 }
 
-/* Optional - animate entry */
-/* .ghost-task.fade-in {
-    animation: fadeInGhost 0.2s ease-out forwards;
-} */
-
-/* @keyframes fadeInGhost {
-    0% {
-        transform: scale(0.95);
-        opacity: 0;
-    }
-    100% {
-        transform: scale(1);
-        opacity: 0.5;
-    }
-} */
-
+form.error {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+    font-size: 0.8rem;
+    color: var(--accent-blue);
+}
 
 @media (max-width: 768px) {
     .container {

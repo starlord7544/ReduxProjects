@@ -9,10 +9,12 @@ import EditTaskPage from './EditTaskPage'
 import AssignIcon from '../assets/Assign.svg'
 import UserList from './UserList'
 import api from '../api'
+import { useNavigate } from 'react-router-dom'
 
 const TaskBox = ({ task, category }) => {
     const [isEditing, setIsEditing] = useState(false)
     const dispatch = useDispatch()
+    const navigate = useNavigate()
     const { isAssignedView, assignPage } = useSelector(state => state.kanban)
     const { title, tags, assignedTo, content, _id, priority } = task
 
@@ -80,13 +82,14 @@ const TaskBox = ({ task, category }) => {
 
     const handleDelete = async () => {
         try {
-            await api.deleteTask(_id)
             dispatch(deleteTask({
                 taskId: _id,
                 category
             }))
+            await api.deleteTask(_id)
         } catch (err) {
             console.error('Delete Failed : ', err)
+            navigate(`/404`)
         }
     }
 
